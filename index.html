@@ -3,1597 +3,1163 @@
 <head><meta name="google-site-verification" content="IWTMKG_96rZWldPgSihAxM09WzgH7WbrMlB86DR6fwI" />
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SKIBIDI ARCHIVES FR | Wiki & Base de Données de l'Alliance</title>
-    <!-- Chargement de Tailwind CSS -->
+    <title>Skibidi Toilet Wiki | Fandom Encyclopédie Officielle FR</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Polices Google Fonts : Orbitron pour le style Cyber/Sci-Fi et Inter pour la lisibilité -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@500;700;900&display=swap" rel="stylesheet">
-    <!-- Icônes FontAwesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <!-- Tone.js pour les effets sonores synthétiques du mini-jeu (aucun lien externe audio requis) -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.8.49/Tone.js"></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             darkMode: 'class',
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
                         cyber: ['Orbitron', 'sans-serif'],
+                        sans: ['Inter', 'sans-serif'],
                     },
                     colors: {
-                        cyber: {
-                            dark: '#07090e',
-                            panel: '#0f141f',
-                            border: '#1e293b',
-                            blue: '#00f0ff',
-                            red: '#ff2a55',
-                            gold: '#ffd700',
-                            purple: '#a855f7'
+                        fandom: {
+                            bg: '#141a29',
+                            dark: '#090d16',
+                            panel: '#1b2234',
+                            border: '#2a354c',
+                            accent: '#ff0055',
+                            blue: '#00c3ff'
                         }
-                    },
-                    boxShadow: {
-                        'neon-blue': '0 0 15px rgba(0, 240, 255, 0.4)',
-                        'neon-red': '0 0 15px rgba(255, 42, 85, 0.4)',
-                        'neon-gold': '0 0 15px rgba(255, 215, 0, 0.4)',
                     }
                 }
             }
         }
     </script>
-
     <style>
-        /* Styles personnalisés pour l'ambiance Cyber / Industrielle et le Mini-Jeu */
         body {
-            background-color: #07090e;
+            background-color: #090d16;
             color: #e2e8f0;
-            background-image: 
-                radial-gradient(circle at 15% 50%, rgba(0, 240, 255, 0.05), transparent 25%),
-                radial-gradient(circle at 85% 30%, rgba(255, 42, 85, 0.05), transparent 25%),
-                linear-gradient(to right, rgba(30, 41, 59, 0.2) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(30, 41, 59, 0.2) 1px, transparent 1px);
-            background-size: 100% 100%, 100% 100%, 40px 40px, 40px 40px;
+            font-family: 'Inter', sans-serif;
             overflow-x: hidden;
         }
-
-        /* Effet scanlines subtil sur l'écran */
-        .scanlines::before {
-            content: " ";
-            display: block;
-            position: fixed;
-            top: 0;
-            left: 0;
-            bottom: 0;
-            right: 0;
-            background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.02), rgba(0, 255, 0, 0.01), rgba(0, 0, 255, 0.02));
-            z-index: 50;
-            background-size: 100% 4px, 6px 100%;
-            pointer-events: none;
-        }
-
-        /* Animations personnalisées */
-        @keyframes pulseGlow {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.6; }
-        }
-        .animate-pulse-glow {
-            animation: pulseGlow 2.5s infinite;
-        }
-
-        /* Style du Canvas du mini-jeu */
-        #game-canvas {
-            background: radial-gradient(circle at center, #111827 0%, #05070a 100%);
-            cursor: crosshair;
-            touch-action: manipulation;
-        }
-
-        /* Barre de défilement personnalisée */
-        ::-webkit-scrollbar {
-            width: 8px;
-        }
-        ::-webkit-scrollbar-track {
-            background: #07090e;
-        }
-        ::-webkit-scrollbar-thumb {
-            background: #1e293b;
-            border-radius: 4px;
-        }
-        ::-webkit-scrollbar-thumb:hover {
-            background: #00f0ff;
-        }
+        .fandom-glow { box-shadow: 0 0 30px rgba(0, 195, 255, 0.15); }
     </style>
 </head>
-<body class="scanlines min-h-screen flex flex-col font-sans antialiased selection:bg-cyber-blue selection:text-black">
+<body class="bg-fandom-dark min-h-screen flex flex-col selection:bg-fandom-accent selection:text-white">
 
-    <!-- BARRE DE NAVIGATION PRINCIPALE -->
-    <header class="sticky top-0 z-40 bg-cyber-dark/90 backdrop-blur-md border-b border-cyber-border">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16 sm:h-20">
-                <!-- Logo / Titre -->
-                <div class="flex items-center gap-3 cursor-pointer" onclick="switchTab('accueil')">
-                    <div class="w-10 h-10 rounded-lg bg-gradient-to-br from-cyber-blue to-blue-700 flex items-center justify-center shadow-neon-blue">
-                        <i class="fa-solid fa-video text-black text-xl"></i>
-                    </div>
-                    <div>
-                        <span class="font-cyber font-black text-lg sm:text-xl tracking-wider text-white block leading-none">
-                            SKIBIDI<span class="text-cyber-blue">.FR</span>
-                        </span>
-                        <span class="text-[10px] font-cyber uppercase tracking-widest text-cyber-gold">Archives de l'Alliance</span>
-                    </div>
+    <!-- Fandom Community Header -->
+    <header class="sticky top-0 z-50 bg-fandom-bg border-b border-fandom-border shadow-md">
+        <div class="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="switchTab('home')">
+                <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-fandom-blue to-fandom-accent flex items-center justify-center font-cyber font-bold text-black text-sm">
+                    STW
                 </div>
-
-                <!-- Navigation Desktop -->
-                <nav class="hidden md:flex space-x-2">
-                    <button onclick="switchTab('accueil')" id="nav-accueil" class="nav-btn active px-4 py-2 rounded-lg font-cyber text-sm font-semibold transition-all duration-200 flex items-center gap-2 bg-cyber-blue/15 text-cyber-blue border border-cyber-blue/50 shadow-neon-blue">
-                        <i class="fa-solid fa-house"></i> Accueil
-                    </button>
-                    <button onclick="switchTab('factions')" id="nav-factions" class="nav-btn px-4 py-2 rounded-lg font-cyber text-sm font-semibold transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent">
-                        <i class="fa-solid fa-users-viewfinder"></i> Wiki Complet (42)
-                    </button>
-                    <button onclick="switchTab('chronologie')" id="nav-chronologie" class="nav-btn px-4 py-2 rounded-lg font-cyber text-sm font-semibold transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent">
-                        <i class="fa-solid fa-timeline"></i> Chronologie des Saisons
-                    </button>
-                    <button onclick="switchTab('minijeu')" id="nav-minijeu" class="nav-btn px-4 py-2 rounded-lg font-cyber text-sm font-semibold transition-all duration-200 flex items-center gap-2 text-cyber-gold hover:bg-cyber-gold/10 border border-cyber-gold/30">
-                        <i class="fa-solid fa-crosshairs"></i> Flush Defense
-                    </button>
-                </nav>
-
-                <!-- Bouton Menu Mobile -->
-                <div class="md:hidden">
-                    <button onclick="toggleMobileMenu()" class="p-2 rounded-lg text-slate-300 hover:text-cyber-blue border border-slate-700 bg-cyber-panel">
-                        <i class="fa-solid fa-bars text-xl" id="mobile-menu-icon"></i>
-                    </button>
+                <div>
+                    <span class="font-cyber font-black tracking-wider text-sm sm:text-base text-white">SKIBIDI TOILET WIKI</span>
+                    <span class="block text-[9px] text-fandom-blue font-cyber tracking-widest uppercase">Fandom Community (Français)</span>
                 </div>
             </div>
-        </div>
 
-        <!-- Navigation Mobile Déroulante -->
-        <div id="mobile-menu" class="hidden md:hidden bg-cyber-panel border-b border-cyber-border px-4 pt-2 pb-4 space-y-2">
-            <button onclick="switchTab('accueil'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg font-cyber text-sm font-semibold text-cyber-blue bg-cyber-blue/10 border border-cyber-blue/30 flex items-center gap-3">
-                <i class="fa-solid fa-house w-5"></i> Accueil
-            </button>
-            <button onclick="switchTab('factions'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg font-cyber text-sm font-semibold text-slate-300 hover:bg-slate-800 flex items-center gap-3">
-                <i class="fa-solid fa-users-viewfinder w-5"></i> Wiki Complet (42 Persos)
-            </button>
-            <button onclick="switchTab('chronologie'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg font-cyber text-sm font-semibold text-slate-300 hover:bg-slate-800 flex items-center gap-3">
-                <i class="fa-solid fa-timeline w-5"></i> Chronologie des Saisons
-            </button>
-            <button onclick="switchTab('minijeu'); toggleMobileMenu()" class="w-full text-left px-4 py-3 rounded-lg font-cyber text-sm font-semibold text-cyber-gold bg-cyber-gold/10 border border-cyber-gold/30 flex items-center gap-3">
-                <i class="fa-solid fa-crosshairs w-5"></i> Mini-Jeu : Flush Defense
-            </button>
+            <nav class="hidden md:flex items-center space-x-2">
+                <button onclick="switchTab('home')" id="nav-home" class="px-3 py-1.5 rounded-md font-cyber text-xs uppercase transition-all text-fandom-blue bg-fandom-blue/10 border border-fandom-blue/30">Accueil</button>
+                <button onclick="switchTab('wiki')" id="nav-wiki" class="px-3 py-1.5 rounded-md font-cyber text-xs uppercase transition-all text-slate-300 hover:text-white hover:bg-slate-800">Encyclopédie Complète (453+ Éléments)</button>
+                <button onclick="switchTab('game')" id="nav-game" class="px-3 py-1.5 rounded-md font-cyber text-xs uppercase transition-all text-slate-300 hover:text-white hover:bg-slate-800"><i class="fa-solid fa-gamepad text-fandom-accent"></i> Jeu</button>
+                <button onclick="switchTab('discord')" id="nav-discord" class="px-3 py-1.5 rounded-md font-cyber text-xs uppercase transition-all text-slate-300 hover:text-white hover:bg-slate-800"><i class="fa-brands fa-discord text-indigo-400"></i> Discord</button>
+            </nav>
         </div>
     </header>
 
-    <!-- CONTENU PRINCIPAL (VUES PAR ONGLETS) -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
+    <!-- Main Container -->
+    <main class="flex-grow max-w-7xl mx-auto px-4 py-6 w-full space-y-8">
 
-        <!-- ========================================== -->
-        <!-- ONGLET 1 : ACCUEIL                         -->
-        <!-- ========================================== -->
-        <section id="tab-accueil" class="tab-content space-y-12">
-            <!-- Bannière Héroïque -->
-            <div class="relative rounded-2xl overflow-hidden bg-cyber-panel border border-cyber-border p-6 sm:p-12 shadow-2xl">
-                <!-- Décoration arrière-plan -->
-                <div class="absolute -top-24 -right-24 w-96 h-96 bg-cyber-blue/10 rounded-full blur-3xl pointer-events-none"></div>
-                <div class="absolute -bottom-24 -left-24 w-96 h-96 bg-cyber-red/10 rounded-full blur-3xl pointer-events-none"></div>
-
-                <div class="relative z-10 grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
-                    <div class="lg:col-span-7 space-y-6">
-                        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-cyber-red/15 border border-cyber-red/40 text-cyber-red text-xs font-cyber uppercase tracking-wider">
-                            <span class="w-2 h-2 rounded-full bg-cyber-red animate-ping"></span>
-                            Alerte Mondiale : Invasion Astro en cours
-                        </div>
-                        
-                        <h1 class="font-cyber text-3xl sm:text-5xl font-black text-white leading-tight">
-                            L'ENCYCLOPÉDIE FRANCOPHONE DE <span class="text-transparent bg-clip-text bg-gradient-to-r from-cyber-blue via-white to-cyber-gold">SKIBIDI TOILET</span>
-                        </h1>
-                        
-                        <p class="text-slate-300 text-base sm:text-lg leading-relaxed">
-                            Plongez dans l'univers dystopique et explosif créé par <strong class="text-cyber-gold">DaFuq!?Boom!</strong>. Suivez la guerre technologique sans merci opposant <strong class="text-cyber-blue">l'Alliance</strong> (Cameramen, Speakermen, TV Men) aux <strong class="text-cyber-red">Skibidi Toilets</strong> et à la redoutable flotte extraterrestre des <strong class="text-purple-400">Astro Toilets</strong>.
-                        </p>
-
-                        <div class="flex flex-wrap gap-4 pt-2">
-                            <button onclick="switchTab('factions')" class="px-6 py-3.5 rounded-xl bg-cyber-blue text-black font-cyber font-bold text-sm uppercase tracking-wider hover:bg-cyan-300 transition-all shadow-neon-blue flex items-center gap-2">
-                                <i class="fa-solid fa-database"></i> Explorer le Wiki
-                            </button>
-                            <button onclick="switchTab('minijeu')" class="px-6 py-3.5 rounded-xl bg-cyber-panel text-cyber-gold border border-cyber-gold/50 font-cyber font-bold text-sm uppercase tracking-wider hover:bg-cyber-gold/10 transition-all shadow-neon-gold flex items-center gap-2">
-                                <i class="fa-solid fa-gamepad"></i> Jouer à Flush Defense
-                            </button>
-                        </div>
-                    </div>
-
-                    <!-- Visuel Terminal / Radar Tactique SVG -->
-                    <div class="lg:col-span-5 flex justify-center">
-                        <div class="w-full max-w-sm bg-cyber-dark/90 border border-cyber-blue/40 rounded-2xl p-5 shadow-neon-blue relative">
-                            <div class="flex justify-between items-center border-b border-slate-800 pb-3 mb-4">
-                                <span class="font-cyber text-xs text-cyber-blue flex items-center gap-2">
-                                    <i class="fa-solid fa-satellite-dish animate-pulse"></i> TERMINAL ALLIANCE v7.7
-                                </span>
-                                <span class="text-[10px] font-mono text-emerald-400 bg-emerald-950/60 px-2 py-0.5 rounded border border-emerald-500/30">CONNEXION SÉCURISÉE</span>
-                            </div>
-                            
-                            <!-- Illustration SVG Vectorielle d'un Noyau Titan -->
-                            <div class="flex justify-center my-4">
-                                <svg class="w-44 h-44" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
-                                    <circle cx="100" cy="100" r="90" stroke="#1e293b" stroke-width="2" stroke-dasharray="6 6"/>
-                                    <circle cx="100" cy="100" r="72" stroke="#00f0ff" stroke-width="3" stroke-opacity="0.6"/>
-                                    <circle cx="100" cy="100" r="54" stroke="#ffd700" stroke-width="2" stroke-dasharray="12 4"/>
-                                    <polygon points="100,45 148,128 52,128" stroke="#00f0ff" stroke-width="3" fill="rgba(0, 240, 255, 0.1)"/>
-                                    <circle cx="100" cy="100" r="22" fill="#00f0ff" class="animate-pulse-glow"/>
-                                    <circle cx="100" cy="100" r="10" fill="#ffffff"/>
-                                </svg>
-                            </div>
-
-                            <div class="space-y-2 text-xs font-mono text-slate-400">
-                                <div class="flex justify-between">
-                                    <span>> Énergie Noyau Titan :</span>
-                                    <span class="text-cyber-blue font-bold">98.4% OPTIMAL</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span>> Menace Astro Détectée :</span>
-                                    <span class="text-cyber-red font-bold">NIVEAU CRITIQUE</span>
-                                </div>
-                                <div class="flex justify-between">
-                                    <span>> Base de données :</span>
-                                    <span class="text-cyber-gold">100% TRADUITE EN FR</span>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
+        <!-- TAB: HOME -->
+        <section id="tab-home" class="tab-content space-y-8">
+            <div class="bg-fandom-panel border border-fandom-border rounded-2xl p-6 sm:p-10 fandom-glow space-y-6">
+                <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-fandom-blue/10 border border-fandom-blue/30 text-fandom-blue text-xs font-cyber">
+                    <i class="fa-solid fa-globe"></i> Source : skibidi-toilet.fandom.com/wiki/Category:Characters
+                </div>
+                <h1 class="font-cyber font-black text-3xl sm:text-5xl text-white leading-tight">
+                    Skibidi Toilet Wiki <br><span class="text-fandom-blue">Catégorie : Personnages (Intégral)</span>
+                </h1>
+                <p class="text-slate-300 text-sm sm:text-base leading-relaxed max-w-3xl">
+                    Bienvenue sur la base de données exhaustive inspirée mot pour mot de l'arborescence officielle du wiki Fandom. Retrouvez tous les personnages répertoriés de l'univers DaFuq!?Boom! avec leurs factions, rôles, statuts et équipements complets.
+                </p>
+                <div class="flex flex-wrap gap-4 pt-2">
+                    <button onclick="switchTab('wiki')" class="px-6 py-3 rounded-xl font-cyber font-bold text-xs uppercase bg-fandom-blue text-black hover:bg-fandom-blue/90 transition-all flex items-center gap-2 shadow-lg">
+                        <i class="fa-solid fa-book-open"></i> Accéder au Wiki Alphabétique (453 entrées)
+                    </button>
+                    <button onclick="switchTab('discord')" class="px-6 py-3 rounded-xl font-cyber font-bold text-xs uppercase bg-indigo-600 text-white hover:bg-indigo-500 transition-all flex items-center gap-2 shadow-lg">
+                        <i class="fa-brands fa-discord"></i> Rejoindre le Discord Fandom
+                    </button>
                 </div>
             </div>
 
-            <!-- Statistiques Clés de la Série -->
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                <div class="bg-cyber-panel border border-cyber-border rounded-xl p-6 hover:border-cyber-blue/60 transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-slate-400 text-sm font-medium">Épisodes Principaux</span>
-                        <div class="w-10 h-10 rounded-lg bg-cyber-blue/10 text-cyber-blue flex items-center justify-center">
-                            <i class="fa-solid fa-film text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="font-cyber text-3xl font-black text-white">77+</div>
-                    <p class="text-xs text-slate-400 mt-1">Répartis sur 25 Saisons officielles</p>
+            <!-- Factions principales Fandom -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div onclick="filterByFaction('The Alliance')" class="bg-fandom-panel border border-fandom-border hover:border-fandom-blue rounded-xl p-5 cursor-pointer transition-all space-y-2">
+                    <div class="w-10 h-10 rounded-lg bg-blue-500/20 text-blue-400 flex items-center justify-center font-bold"><i class="fa-solid fa-shield-halved"></i></div>
+                    <h3 class="font-cyber font-bold text-white">The Alliance</h3>
+                    <p class="text-xs text-slate-400">Cameramen, Speakermen, TV Men et leurs Titans respectifs.</p>
                 </div>
-
-                <div class="bg-cyber-panel border border-cyber-border rounded-xl p-6 hover:border-cyber-gold/60 transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-slate-400 text-sm font-medium">Factions Majeures</span>
-                        <div class="w-10 h-10 rounded-lg bg-cyber-gold/10 text-cyber-gold flex items-center justify-center">
-                            <i class="fa-solid fa-shield-halved text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="font-cyber text-3xl font-black text-white">3 Blocs</div>
-                    <p class="text-xs text-slate-400 mt-1">L'Alliance, Skibidis & Astro Toilets</p>
+                <div onclick="filterByFaction('Skibidi Toilets')" class="bg-fandom-panel border border-fandom-border hover:border-fandom-accent rounded-xl p-5 cursor-pointer transition-all space-y-2">
+                    <div class="w-10 h-10 rounded-lg bg-red-500/20 text-red-400 flex items-center justify-center font-bold"><i class="fa-solid fa-skull"></i></div>
+                    <h3 class="font-cyber font-bold text-white">Skibidi Toilets</h3>
+                    <p class="text-xs text-slate-400">Infanterie, G-Toilet, Scientist, troupes blindées et volantes.</p>
                 </div>
-
-                <div class="bg-cyber-panel border border-cyber-border rounded-xl p-6 hover:border-cyber-red/60 transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-slate-400 text-sm font-medium">Statut du Conflit</span>
-                        <div class="w-10 h-10 rounded-lg bg-cyber-red/10 text-cyber-red flex items-center justify-center">
-                            <i class="fa-solid fa-fire-flame-curved text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="font-cyber text-2xl font-black text-cyber-red">TRÊVE FORCÉE</div>
-                    <p class="text-xs text-slate-400 mt-1">Alliance temporaire face aux Astros</p>
+                <div onclick="filterByFaction('Mutants Cyborgs')" class="bg-fandom-panel border border-fandom-border hover:border-amber-500 rounded-xl p-5 cursor-pointer transition-all space-y-2">
+                    <div class="w-10 h-10 rounded-lg bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold"><i class="fa-solid fa-bolt"></i></div>
+                    <h3 class="font-cyber font-bold text-white">Mutants Cyborgs</h3>
+                    <p class="text-xs text-slate-400">Mutants améliorés aux scies circulaires et armes lourdes.</p>
                 </div>
-
-                <div class="bg-cyber-panel border border-cyber-border rounded-xl p-6 hover:border-purple-500/60 transition-all">
-                    <div class="flex items-center justify-between mb-3">
-                        <span class="text-slate-400 text-sm font-medium">Créateur Original</span>
-                        <div class="w-10 h-10 rounded-lg bg-purple-500/10 text-purple-400 flex items-center justify-center">
-                            <i class="fa-brands fa-youtube text-lg"></i>
-                        </div>
-                    </div>
-                    <div class="font-cyber text-2xl font-black text-white">DaFuq!?Boom!</div>
-                    <p class="text-xs text-slate-400 mt-1">Animé sur Source Filmmaker (SFM)</p>
-                </div>
-            </div>
-
-            <!-- Aperçu Rapide des Factions -->
-            <div class="space-y-4">
-                <h2 class="font-cyber text-xl sm:text-2xl font-bold text-white flex items-center gap-3">
-                    <span class="w-2 h-8 bg-cyber-blue rounded-full"></span>
-                    LES FORCES EN PRÉSENCE
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                    <!-- Carte Alliance -->
-                    <div class="bg-cyber-panel border border-cyber-blue/30 rounded-xl p-6 space-y-3">
-                        <div class="flex items-center gap-3 text-cyber-blue">
-                            <i class="fa-solid fa-camera text-2xl"></i>
-                            <h3 class="font-cyber font-bold text-lg">L'ALLIANCE</h3>
-                        </div>
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            Coalition humanoïde composée des <strong>Cameramen</strong> (infanterie et ingénieurs), des <strong>Speakermen</strong> (ondes sonores et agilité) et des mystérieux <strong>TV Men</strong> (téléportation et rayons hypnotiques).
-                        </p>
-                    </div>
-                    <!-- Carte Skibidi Toilets -->
-                    <div class="bg-cyber-panel border border-cyber-gold/30 rounded-xl p-6 space-y-3">
-                        <div class="flex items-center gap-3 text-cyber-gold">
-                            <i class="fa-solid fa-toilet text-2xl"></i>
-                            <h3 class="font-cyber font-bold text-lg">LES SKIBIDI TOILETS</h3>
-                        </div>
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            Armée dirigée par le redoutable <strong>G-Man</strong> et le <strong>Scientifique en Chef</strong>. Capables d'évolution mécanique rapide, d'infection parasitaire et d'armement lourd laser.
-                        </p>
-                    </div>
-                    <!-- Carte Astro Toilets -->
-                    <div class="bg-cyber-panel border border-cyber-red/30 rounded-xl p-6 space-y-3">
-                        <div class="flex items-center gap-3 text-cyber-red">
-                            <i class="fa-solid fa-meteor text-2xl"></i>
-                            <h3 class="font-cyber font-bold text-lg">LES ASTRO TOILETS</h3>
-                        </div>
-                        <p class="text-sm text-slate-300 leading-relaxed">
-                            Empire extraterrestre conquérant doté de technologie de distorsion (Warp), de lévitation magnétique et d'une puissance de feu surpassant toutes les armées terrestres.
-                        </p>
-                    </div>
+                <div onclick="filterByFaction('Astro Toilets')" class="bg-fandom-panel border border-fandom-border hover:border-purple-500 rounded-xl p-5 cursor-pointer transition-all space-y-2">
+                    <div class="w-10 h-10 rounded-lg bg-purple-500/20 text-purple-400 flex items-center justify-center font-bold"><i class="fa-solid fa-meteor"></i></div>
+                    <h3 class="font-cyber font-bold text-white">Astro Toilets</h3>
+                    <p class="text-xs text-slate-400">Flotte interstellaire, Detainer, Obliterator et Mothership.</p>
                 </div>
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- ONGLET 2 : FACTIONS & PERSONNAGES          -->
-        <!-- ========================================== -->
-        <section id="tab-factions" class="tab-content hidden space-y-6">
-            <div class="border-b border-cyber-border pb-6 space-y-5">
-                <div class="flex flex-col md:flex-row md:items-end justify-between gap-4">
+        <!-- TAB: WIKI (Encyclopédie & Index Alphabétique) -->
+        <section id="tab-wiki" class="tab-content hidden space-y-8">
+            <div class="bg-fandom-panel border border-fandom-border rounded-xl p-6 space-y-4">
+                <div class="flex flex-col md:flex-row justify-between items-center gap-4">
                     <div>
-                        <span class="text-cyber-blue font-cyber text-xs uppercase tracking-widest">Base de Données Tactique • Épisodes 1 à 77+</span>
-                        <h2 class="font-cyber text-2xl sm:text-4xl font-black text-white mt-1">ENCYCLOPÉDIE INTÉGRALE</h2>
-                        <p class="text-slate-400 text-sm mt-1">Explorez l'intégralité des unités depuis l'Épisode 1. Cliquez sur une fiche pour accéder au dossier complet.</p>
+                        <h2 class="font-cyber font-bold text-xl text-white">Encyclopédie Classée par Factions & Catégories</h2>
+                        <p class="text-xs text-slate-400">Parcourez les catégories officielles du Fandom ou filtrez par mot-clé.</p>
                     </div>
-
-                    <!-- Compteur dynamique -->
-                    <div class="bg-cyber-panel border border-cyber-border px-4 py-2 rounded-xl flex items-center gap-3 self-start md:self-auto">
-                        <span class="w-2.5 h-2.5 rounded-full bg-cyber-blue animate-pulse"></span>
-                        <span class="font-cyber text-xs text-slate-300">Affichage : <strong id="char-count" class="text-cyber-blue text-sm">42</strong> unités</span>
+                    <div class="w-full md:w-80">
+                        <input type="text" id="wiki-search" oninput="filterWiki()" placeholder="Rechercher un personnage..." class="w-full bg-fandom-dark border border-fandom-border px-4 py-2.5 rounded-lg text-xs text-white focus:outline-none focus:border-fandom-blue">
                     </div>
                 </div>
-
-                <!-- Barre de Recherche + Tri -->
-                <div class="grid grid-cols-1 md:grid-cols-12 gap-3">
-                    <div class="md:col-span-8 relative">
-                        <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400"></i>
-                        <input type="text" id="wiki-search" oninput="updateWikiView()" placeholder="Rechercher par nom, épisode (ex: Ép. 1, Ép. 70), arme ou capacité..." class="w-full pl-11 pr-10 py-3 rounded-xl bg-cyber-panel border border-cyber-border focus:border-cyber-blue focus:outline-none text-sm text-white placeholder-slate-500 transition-colors">
-                        <button id="clear-search-btn" onclick="clearWikiSearch()" class="hidden absolute right-3 top-1/2 -translate-y-1/2 text-slate-400 hover:text-white p-1">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-
-                    <div class="md:col-span-4">
-                        <select id="wiki-sort" onchange="updateWikiView()" class="w-full px-4 py-3 rounded-xl bg-cyber-panel border border-cyber-border focus:border-cyber-blue focus:outline-none text-sm text-white font-cyber cursor-pointer">
-                            <option value="episode-asc">Tri : Ordre Chronologique (Ép. 1 → 77)</option>
-                            <option value="episode-desc">Tri : Plus Récents d'abord (Ép. 77 → 1)</option>
-                            <option value="power-desc">Tri : Puissance Décroissante</option>
-                            <option value="name-asc">Tri : Ordre Alphabétique (A → Z)</option>
-                        </select>
-                    </div>
+                <!-- Sélecteurs rapides de Catégories / Factions -->
+                <div class="flex flex-wrap gap-2 pt-2" id="category-filter-container">
+                    <button onclick="filterByFaction('')" class="px-3 py-1.5 rounded-lg bg-fandom-blue text-black font-cyber text-xs font-bold uppercase transition-all">Toutes les Catégories</button>
+                    <button onclick="filterByFaction('The Alliance')" class="px-3 py-1.5 rounded-lg bg-blue-500/20 text-blue-400 border border-blue-500/30 font-cyber text-xs font-bold uppercase transition-all hover:bg-blue-500/30">The Alliance</button>
+                    <button onclick="filterByFaction('Skibidi Toilets')" class="px-3 py-1.5 rounded-lg bg-red-500/20 text-red-400 border border-red-500/30 font-cyber text-xs font-bold uppercase transition-all hover:bg-red-500/30">Skibidi Toilets</button>
+                    <button onclick="filterByFaction('Mutants Cyborgs')" class="px-3 py-1.5 rounded-lg bg-amber-500/20 text-amber-400 border border-amber-500/30 font-cyber text-xs font-bold uppercase transition-all hover:bg-amber-500/30">Mutants Cyborgs</button>
+                    <button onclick="filterByFaction('Astro Toilets')" class="px-3 py-1.5 rounded-lg bg-purple-500/20 text-purple-400 border border-purple-500/30 font-cyber text-xs font-bold uppercase transition-all hover:bg-purple-500/30">Astro Toilets</button>
+                    <button onclick="filterByFaction('Humans / Secrets')" class="px-3 py-1.5 rounded-lg bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-cyber text-xs font-bold uppercase transition-all hover:bg-emerald-500/30">Humans & Secrets</button>
                 </div>
-
-                <!-- Filtres Interactifs par Faction -->
-                <div class="flex flex-wrap gap-2" id="faction-filters">
-                    <button onclick="filterCharacters('all')" data-filter="all" class="filter-btn active px-3.5 py-2 rounded-lg font-cyber text-xs font-bold uppercase bg-white text-black transition-all">
-                        Tous (42)
-                    </button>
-                    <button onclick="filterCharacters('skibidi')" data-filter="skibidi" class="filter-btn px-3.5 py-2 rounded-lg font-cyber text-xs font-bold uppercase bg-cyber-panel text-cyber-gold border border-cyber-gold/40 hover:bg-cyber-gold/20 transition-all">
-                        Skibidi Toilets (15)
-                    </button>
-                    <button onclick="filterCharacters('alliance')" data-filter="alliance" class="filter-btn px-3.5 py-2 rounded-lg font-cyber text-xs font-bold uppercase bg-cyber-panel text-cyber-blue border border-cyber-blue/40 hover:bg-cyber-blue/20 transition-all">
-                        L'Alliance (20)
-                    </button>
-                    <button onclick="filterCharacters('astro')" data-filter="astro" class="filter-btn px-3.5 py-2 rounded-lg font-cyber text-xs font-bold uppercase bg-cyber-panel text-cyber-red border border-cyber-red/40 hover:bg-cyber-red/20 transition-all">
-                        Astro Toilets (6)
-                    </button>
-                    <button onclick="filterCharacters('inconnu')" data-filter="inconnu" class="filter-btn px-3.5 py-2 rounded-lg font-cyber text-xs font-bold uppercase bg-cyber-panel text-emerald-400 border border-emerald-500/40 hover:bg-emerald-500/20 transition-all">
-                        Entité Mystère (1)
-                    </button>
+                <div class="flex flex-wrap gap-1.5 pt-1 border-t border-fandom-border/50 mt-2 pt-3" id="alphabet-container">
+                    <button onclick="filterByLetter('')" class="px-2 py-0.5 rounded bg-fandom-dark border border-fandom-border font-cyber text-[10px] text-slate-300 hover:border-fandom-blue">Tous (A-Z)</button>
                 </div>
             </div>
 
-            <!-- Message si aucun résultat -->
-            <div id="no-results-msg" class="hidden bg-cyber-panel border border-cyber-border rounded-2xl p-10 text-center space-y-3">
-                <i class="fa-solid fa-satellite-dish text-4xl text-slate-600"></i>
-                <h3 class="font-cyber text-lg font-bold text-white">Aucune archive correspondante</h3>
-                <p class="text-sm text-slate-400">Aucune unité ne correspond à votre recherche. Essayez un autre nom ou réinitialisez les filtres.</p>
-                <button onclick="resetAllFilters()" class="px-4 py-2 rounded-lg bg-cyber-blue text-black font-cyber text-xs font-bold uppercase">Réinitialiser</button>
-            </div>
-
-            <!-- Grille des Personnages (Générée dynamiquement par JS) -->
-            <div id="characters-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                <!-- Les cartes seront injectées ici -->
+            <!-- Grille du Wiki -->
+            <div id="wiki-grid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Rempli dynamiquement -->
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- ONGLET 3 : CHRONOLOGIE DES SAISONS          -->
-        <!-- ========================================== -->
-        <section id="tab-chronologie" class="tab-content hidden space-y-8">
-            <div class="border-b border-cyber-border pb-6">
-                <span class="text-cyber-gold font-cyber text-xs uppercase tracking-widest">Archives Historiques</span>
-                <h2 class="font-cyber text-2xl sm:text-4xl font-black text-white mt-1">CHRONOLOGIE DES ARCS NARRATIFS</h2>
-                <p class="text-slate-400 text-sm mt-2">L'évolution complète du conflit, des premiers incidents viraux jusqu'à la guerre galactique.</p>
+        <!-- Fenêtre Modale (Popup) Finition -->
+        <div id="character-modal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm hidden" onclick="closeModal(event)">
+            <div class="bg-fandom-panel border border-fandom-blue rounded-2xl max-w-lg w-full p-6 space-y-6 relative max-h-[90vh] overflow-y-auto" onclick="event.stopPropagation()">
+                <button onclick="closeModalDirect()" class="absolute top-5 right-5 text-slate-400 hover:text-white bg-fandom-dark p-2 rounded-full border border-fandom-border">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+                <div id="modal-content" class="space-y-4">
+                    <!-- Injecté dynamiquement -->
+                </div>
             </div>
+        </div>
 
-            <!-- Frise Chronologique Interactive -->
-            <div class="relative border-l-2 border-cyber-blue/40 ml-4 sm:ml-8 space-y-10 py-4" id="timeline-container">
-                <!-- Les événements de la frise seront injectés ici -->
+        <!-- TAB: GAME -->
+        <section id="tab-game" class="tab-content hidden space-y-8">
+            <div class="text-center max-w-xl mx-auto space-y-2">
+                <h2 class="font-cyber font-black text-3xl text-white">FLUSH DEFENSE</h2>
+                <p class="text-slate-400 text-xs">Défendez la base contre l'invasion des Skibidi Toilets !</p>
+            </div>
+            <div class="max-w-2xl mx-auto bg-fandom-panel border border-fandom-border rounded-xl p-6 text-center space-y-6">
+                <div class="flex justify-around bg-fandom-dark px-4 py-3 rounded-lg border border-fandom-border">
+                    <div><span class="text-[9px] text-slate-400 font-cyber block">Vague</span><span id="game-wave" class="font-cyber font-bold text-lg text-fandom-blue">1 / 5</span></div>
+                    <div><span class="text-[9px] text-slate-400 font-cyber block">HP Base</span><span id="game-hp" class="font-cyber font-bold text-lg text-emerald-400">100 HP</span></div>
+                    <div><span class="text-[9px] text-slate-400 font-cyber block">Score</span><span id="game-score" class="font-cyber font-bold text-lg text-amber-400">0 pts</span></div>
+                </div>
+                <div class="h-36 bg-fandom-dark rounded-lg border border-fandom-border flex items-center justify-center p-4">
+                    <div id="game-message" class="font-cyber text-sm text-white">Prêt pour lancer la défense ?</div>
+                </div>
+                <button onclick="startWave()" class="px-6 py-3 rounded-xl font-cyber font-bold text-xs uppercase bg-fandom-accent text-white hover:bg-fandom-accent/90">LANCER LA VAGUE</button>
             </div>
         </section>
 
-        <!-- ========================================== -->
-        <!-- ONGLET 4 : MINI-JEU "FLUSH DEFENSE"        -->
-        <!-- ========================================== -->
-        <section id="tab-minijeu" class="tab-content hidden space-y-6">
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-cyber-panel border border-cyber-gold/40 rounded-xl p-5">
-                <div>
-                    <div class="flex items-center gap-2">
-                        <span class="px-2 py-0.5 rounded bg-cyber-gold text-black font-cyber font-bold text-xs">SIMULATION DE COMBAT</span>
-                        <h2 class="font-cyber text-xl sm:text-2xl font-black text-white">FLUSH DEFENSE</h2>
+        <!-- TAB: DISCORD -->
+        <section id="tab-discord" class="tab-content hidden space-y-8">
+            <div class="max-w-4xl mx-auto bg-fandom-panel border border-indigo-500/40 rounded-2xl overflow-hidden shadow-2xl relative">
+                <!-- Bannière Discord En-tête -->
+                <div class="relative h-48 sm:h-60 w-full bg-indigo-950/60 overflow-hidden flex items-center justify-center border-b border-indigo-500/30">
+                    <div class="absolute inset-0 bg-gradient-to-t from-fandom-panel via-indigo-950/40 to-transparent z-10"></div>
+                    <div class="absolute inset-0 opacity-20 bg-[radial-gradient(#5865F2_1px,transparent_1px)] [background-size:16px_16px]"></div>
+                    <div class="relative z-20 text-center space-y-2 px-4">
+                        <div class="w-20 h-20 mx-auto rounded-2xl bg-indigo-600 border-2 border-indigo-400 flex items-center justify-center shadow-2xl glow-discord mb-2">
+                            <i class="fa-brands fa-discord text-4xl text-white"></i>
+                        </div>
+                        <h2 class="font-cyber font-black text-2xl sm:text-4xl text-white tracking-wider">
+                            SKIBIDI TOILET <span class="text-indigo-400">RP FRANCE</span>
+                        </h2>
+                        <p class="text-xs text-indigo-200 font-cyber">QG officiel de la communauté francophone</p>
                     </div>
-                    <p class="text-slate-300 text-xs sm:text-sm mt-1">
-                        Cliquez ou touchez les <strong>Skibidi Toilets</strong> et <strong>Astros</strong> pour tirer au canon plasma avant que la barre d'invasion n'atteigne 100% !
-                    </p>
                 </div>
-                <div class="flex items-center gap-3">
-                    <button id="toggle-sound-btn" onclick="toggleGameSound()" class="px-3 py-2 rounded-lg bg-cyber-dark border border-slate-700 text-slate-300 hover:text-cyber-blue text-xs font-cyber flex items-center gap-2">
-                        <i class="fa-solid fa-volume-high" id="sound-icon"></i> Son : ON
+
+                <!-- Navigation par 4 Sous-onglets Discord Dédiés -->
+                <div class="flex flex-wrap justify-center gap-2 p-4 bg-fandom-dark border-b border-fandom-border">
+                    <button onclick="switchDiscordSubTab('invit')" id="discord-sub-invit" class="discord-sub-btn px-3 py-2 rounded-xl font-cyber text-xs font-bold uppercase transition-all bg-indigo-600 text-white shadow-lg">
+                        <i class="fa-solid fa-link mr-1"></i> Lien du Serveur : https://discord.gg/EhBmwz3f2k
+                    </button>
+                    <button onclick="switchDiscordSubTab('explication')" id="discord-sub-explication" class="discord-sub-btn px-3 py-2 rounded-xl font-cyber text-xs font-bold uppercase transition-all bg-fandom-panel text-slate-400 hover:text-white border border-fandom-border">
+                        <i class="fa-solid fa-book-bookmark mr-1"></i> Explication du RP
+                    </button>
+                    <button onclick="switchDiscordSubTab('periodes')" id="discord-sub-periodes" class="discord-sub-btn px-3 py-2 rounded-xl font-cyber text-xs font-bold uppercase transition-all bg-fandom-panel text-slate-400 hover:text-white border border-fandom-border">
+                        <i class="fa-solid fa-calendar-days mr-1"></i> Périodes & Dates
+                    </button>
+                    <button onclick="switchDiscordSubTab('dispos')" id="discord-sub-dispos" class="discord-sub-btn px-3 py-2 rounded-xl font-cyber text-xs font-bold uppercase transition-all bg-fandom-panel text-slate-400 hover:text-white border border-fandom-border">
+                        <i class="fa-solid fa-user-check mr-1"></i> Personnages Libres (Live)
                     </button>
                 </div>
-            </div>
 
-            <!-- Tableau de Bord HUD du Jeu -->
-            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
-                <div class="bg-cyber-panel border border-cyber-border rounded-xl p-3 text-center">
-                    <span class="text-[11px] font-cyber text-slate-400 uppercase block">Score</span>
-                    <span id="game-score" class="font-cyber text-2xl font-black text-cyber-blue">0</span>
-                </div>
-                <div class="bg-cyber-panel border border-cyber-border rounded-xl p-3 text-center">
-                    <span class="text-[11px] font-cyber text-slate-400 uppercase block">Vague</span>
-                    <span id="game-wave" class="font-cyber text-2xl font-black text-cyber-gold">1</span>
-                </div>
-                <div class="bg-cyber-panel border border-cyber-border rounded-xl p-3 text-center">
-                    <span class="text-[11px] font-cyber text-slate-400 uppercase block">Meilleur Score</span>
-                    <span id="game-highscore" class="font-cyber text-2xl font-black text-white">0</span>
-                </div>
-                <div class="bg-cyber-panel border border-cyber-border rounded-xl p-3 text-center">
-                    <span class="text-[11px] font-cyber text-slate-400 uppercase block">Intégrité Base</span>
-                    <div class="w-full bg-slate-800 h-3 rounded-full mt-2 overflow-hidden border border-slate-700">
-                        <div id="game-health-bar" class="bg-gradient-to-r from-emerald-400 to-cyber-blue h-full transition-all duration-200" style="width: 100%"></div>
+                <!-- Contenu des Sous-onglets -->
+                <div class="p-6 sm:p-8 space-y-6">
+                    
+                    <!-- 1. Sous-onglet : Lien du Serveur -->
+                    <div id="discord-content-invit" class="discord-sub-content space-y-6 text-center">
+                        <div class="max-w-xl mx-auto space-y-3">
+                            <h3 class="font-cyber font-bold text-xl text-white">Rejoignez notre Serveur Discord Partenaire</h3>
+                            <p class="text-slate-300 text-xs sm:text-sm leading-relaxed">
+                                Cliquez ci-dessous pour accéder directement au serveur officiel et participer aux discussions et guerres tactiques entre l'Alliance et les Toilets.
+                            </p>
+                        </div>
+                        <div class="bg-fandom-dark p-6 rounded-2xl border border-indigo-500/30 max-w-lg mx-auto space-y-4">
+                            <div class="flex items-center justify-between text-xs font-cyber text-slate-300">
+                                <span>Statut du Serveur :</span>
+                                <span class="px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30 font-bold">En ligne & Actif</span>
+                            </div>
+                            <div class="space-y-2">
+                                <label class="text-[10px] text-slate-400 font-cyber uppercase tracking-wider block text-left">Lien d'invitation Discord :</label>
+                                <div class="flex gap-2">
+                                    <input type="text" id="discord-link-input" readonly value="https://discord.gg/EhBmwz3f2k" class="w-full bg-fandom-panel border border-fandom-border px-3 py-2 rounded-lg text-xs text-indigo-300 font-mono select-all focus:outline-none">
+                                    <button onclick="copyDiscordLink()" class="px-4 py-2 rounded-lg bg-indigo-600 text-white font-cyber text-xs font-bold hover:bg-indigo-500 transition-all flex items-center gap-1.5 flex-shrink-0">
+                                        <i class="fa-regular fa-copy"></i> Copier
+                                    </button>
+                                </div>
+                            </div>
+                            <a href="https://discord.gg/EhBmwz3f2k" target="_blank" class="w-full inline-flex items-center justify-center gap-3 px-6 py-3.5 rounded-xl bg-indigo-600 text-white font-cyber font-bold text-xs uppercase tracking-wider hover:bg-indigo-500 transition-all shadow-lg hover:scale-[1.02]">
+                                <i class="fa-brands fa-discord text-lg"></i> Ouvrir le lien dans Discord
+                            </a>
+                        </div>
                     </div>
-                </div>
-            </div>
 
-            <!-- Conteneur du Canvas du Jeu -->
-            <div class="relative w-full h-[420px] sm:h-[500px] rounded-2xl overflow-hidden border-2 border-cyber-blue/50 shadow-neon-blue bg-cyber-dark" id="game-container">
-                <canvas id="game-canvas" class="w-full h-full block"></canvas>
-
-                <!-- Écran Superposé (Démarrage / Game Over) -->
-                <div id="game-overlay" class="absolute inset-0 bg-cyber-dark/85 backdrop-blur-sm flex flex-col items-center justify-center p-6 text-center z-20">
-                    <div class="w-16 h-16 rounded-2xl bg-cyber-blue/20 border border-cyber-blue flex items-center justify-center text-cyber-blue text-3xl mb-4 shadow-neon-blue">
-                        <i class="fa-solid fa-crosshairs"></i>
+                    <!-- 2. Sous-onglet : Explication du RP -->
+                    <div id="discord-content-explication" class="discord-sub-content hidden space-y-6 text-left">
+                        <div class="space-y-2">
+                            <h3 class="font-cyber font-bold text-xl text-white flex items-center gap-2">
+                                <i class="fa-solid fa-book-bookmark text-fandom-blue"></i> Guide & Explication du Roleplay (RP)
+                            </h3>
+                            <p class="text-xs text-slate-400">Principes et règles de narration immersive au sein de notre communauté francophone.</p>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                            <div class="bg-fandom-dark p-5 rounded-xl border border-fandom-border space-y-2">
+                                <span class="font-cyber text-xs text-fandom-blue font-bold uppercase">> Le Concept du RP</span>
+                                <p class="text-[11px] text-slate-300 leading-relaxed">
+                                    Chaque membre incarne un agent de l'Alliance (Cameraman, Speakerman, TV Man), un Skibidi Toilet rebelle ou gradé, ou encore un membre de la flotte interstellaire Astro. Vous écrivez vos actions textuellement ou vocalement dans des salons dédiés.
+                                </p>
+                            </div>
+                            <div class="bg-fandom-dark p-5 rounded-xl border border-fandom-border space-y-2">
+                                <span class="font-cyber text-xs text-amber-400 font-bold uppercase">> Règles de Conduite & Lore</span>
+                                <p class="text-[11px] text-slate-300 leading-relaxed">
+                                    1. <strong>Cohérence de l'univers :</strong> Respectez la technologie et l'échelle des épisodes DaFuq!?Boom!.<br>
+                                    2. <strong>Fair-play :</strong> Pas de puissance excessive (Godmod) sans validation des modérateurs RP.<br>
+                                    3. <strong>Immersion :</strong> Utilisation stricte des balises HRP (Hors-Roleplay) dans les salons généraux.
+                                </p>
+                            </div>
+                        </div>
                     </div>
-                    <h3 id="overlay-title" class="font-cyber text-2xl sm:text-4xl font-black text-white mb-2">DÉFENSE DU QUARTIER GÉNÉRAL</h3>
-                    <p id="overlay-desc" class="text-slate-300 text-sm max-w-md mb-6">
-                        Éliminez les unités ennemies avant qu'elles ne submergent nos défenses. Attention aux <strong>G-Clones</strong> blindés (3 tirs requis) et aux <strong>Astros</strong> ultra-rapides !
-                    </p>
-                    <button onclick="startGame()" class="px-8 py-4 rounded-xl bg-gradient-to-r from-cyber-blue to-cyan-400 text-black font-cyber font-black text-base uppercase tracking-wider hover:scale-105 transition-transform shadow-neon-blue flex items-center gap-3">
-                        <i class="fa-solid fa-play"></i> Lancer la Mission
-                    </button>
-                </div>
-            </div>
 
-            <!-- Légende des Cibles sous le Canvas -->
-            <div class="flex flex-wrap justify-center gap-4 text-xs text-slate-400 bg-cyber-panel/60 p-3 rounded-xl border border-cyber-border">
-                <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-cyber-gold inline-block"></span> Skibidi Standard (1 PV • +100 pts)</span>
-                <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-cyber-red inline-block"></span> Astro Interceptor (1 PV • Rapide • +250 pts)</span>
-                <span class="flex items-center gap-2"><span class="w-3 h-3 rounded-full bg-purple-500 inline-block"></span> Blindé G-Toilet (3 PV • +500 pts)</span>
+                    <!-- 3. Sous-onglet : Périodes & Dates -->
+                    <div id="discord-content-periodes" class="discord-sub-content hidden space-y-6 text-left">
+                        <div class="space-y-2">
+                            <h3 class="font-cyber font-bold text-xl text-white flex items-center gap-2">
+                                <i class="fa-solid fa-calendar-days text-amber-400"></i> Périodes Historiques & Calendrier des Événements
+                            </h3>
+                            <p class="text-xs text-slate-400">Découvrez l'époque actuelle du serveur et les grands rendez-vous de la communauté.</p>
+                        </div>
+                        <div class="space-y-3">
+                            <div class="bg-fandom-dark p-4 rounded-xl border border-fandom-border space-y-1">
+                                <div class="flex justify-between items-center text-xs font-cyber">
+                                    <span class="text-amber-400 font-bold">Époque Actuelle : L'Invasion Astro & La Chute des Titans</span>
+                                    <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 text-[10px]">Saison 3 (Active)</span>
+                                </div>
+                                <p class="text-[11px] text-slate-300">Le serveur se déroule actuellement après les épisodes 70+, marqué par l'arrivée imminente de la flotte interstellaire Astro et la restructuration totale de l'Alliance.</p>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <div class="bg-fandom-dark p-3.5 rounded-xl border border-fandom-border space-y-1">
+                                    <span class="font-cyber text-[10px] text-fandom-blue font-bold uppercase">Mercredis (14h - 18h)</span>
+                                    <p class="text-[11px] text-slate-300">Escarmouches urbaines et patrouilles de reconnaissance des Cameramen.</p>
+                                </div>
+                                <div class="bg-fandom-dark p-3.5 rounded-xl border border-fandom-border space-y-1">
+                                    <span class="font-cyber text-[10px] text-red-400 font-bold uppercase">Vendredis (21h - 00h)</span>
+                                    <p class="text-[11px] text-slate-300">Sièges de districts majeurs et offensives coordonnées des Skibidi Toilets.</p>
+                                </div>
+                                <div class="bg-fandom-dark p-3.5 rounded-xl border border-fandom-border space-y-1">
+                                    <span class="font-cyber text-[10px] text-purple-400 font-bold uppercase">Dimanches (15h - 19h)</span>
+                                    <p class="text-[11px] text-slate-300">Arcs narratifs majeurs et événements canoniques avec les Astro Toilets.</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4. Sous-onglet : Personnages Libres (Live) -->
+                    <div id="discord-content-dispos" class="discord-sub-content hidden space-y-6 text-left">
+                        <div class="space-y-2">
+                            <h3 class="font-cyber font-bold text-xl text-white flex items-center gap-2">
+                                <i class="fa-solid fa-user-check text-emerald-400"></i> Actualité des Rôles & Personnages Actifs Libres
+                            </h3>
+                            <p class="text-xs text-slate-400">Liste synchronisée en temps réel des rôles et personnages importants actuellement disponibles sur le serveur Discord.</p>
+                        </div>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <div class="bg-fandom-dark p-4 rounded-xl border border-blue-500/30 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-cyber text-xs font-bold text-blue-400">The Alliance</span>
+                                    <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px]">3 Libres</span>
+                                </div>
+                                <ul class="text-[11px] text-slate-300 space-y-1.5">
+                                    <li class="flex justify-between items-center"><span>• Cameraman Vétéran</span><span class="text-emerald-400 text-[9px] px-1.5 py-0.5 bg-emerald-500/10 rounded">Libre</span></li>
+                                    <li class="flex justify-between items-center"><span>• Speakerman d'élite</span><span class="text-emerald-400 text-[9px] px-1.5 py-0.5 bg-emerald-500/10 rounded">Libre</span></li>
+                                    <li class="flex justify-between items-center"><span>• TV Man d'escorte</span><span class="text-amber-400 text-[9px] px-1.5 py-0.5 bg-amber-500/10 rounded">Réservable</span></li>
+                                </ul>
+                            </div>
+                            <div class="bg-fandom-dark p-4 rounded-xl border border-red-500/30 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-cyber text-xs font-bold text-red-400">Skibidi Toilets</span>
+                                    <span class="px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 text-[10px]">2 Libres</span>
+                                </div>
+                                <ul class="text-[11px] text-slate-300 space-y-1.5">
+                                    <li class="flex justify-between items-center"><span>• Commandant de Ligne</span><span class="text-emerald-400 text-[9px] px-1.5 py-0.5 bg-emerald-500/10 rounded">Libre</span></li>
+                                    <li class="flex justify-between items-center"><span>• Mutant Berserker</span><span class="text-emerald-400 text-[9px] px-1.5 py-0.5 bg-emerald-500/10 rounded">Libre</span></li>
+                                    <li class="flex justify-between items-center"><span>• Tank Toilet</span><span class="text-rose-400 text-[9px] px-1.5 py-0.5 bg-rose-500/10 rounded">Occupé</span></li>
+                                </ul>
+                            </div>
+                            <div class="bg-fandom-dark p-4 rounded-xl border border-purple-500/30 space-y-3">
+                                <div class="flex justify-between items-center">
+                                    <span class="font-cyber text-xs font-bold text-purple-400">Astro Toilets</span>
+                                    <span class="px-2 py-0.5 rounded bg-amber-500/20 text-amber-400 text-[10px]">1 Libre</span>
+                                </div>
+                                <ul class="text-[11px] text-slate-300 space-y-1.5">
+                                    <li class="flex justify-between items-center"><span>• Astro Interceptor</span><span class="text-emerald-400 text-[9px] px-1.5 py-0.5 bg-emerald-500/10 rounded">Libre</span></li>
+                                    <li class="flex justify-between items-center"><span>• Astro Obliterator</span><span class="text-rose-400 text-[9px] px-1.5 py-0.5 bg-rose-500/10 rounded">Occupé</span></li>
+                                    <li class="flex justify-between items-center"><span>• Astro Detainer</span><span class="text-amber-400 text-[9px] px-1.5 py-0.5 bg-amber-500/10 rounded">Réservé</span></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </section>
 
     </main>
 
-    <!-- MODALE FICHE DÉTAILLÉE PERSONNAGE -->
-    <div id="character-modal" class="fixed inset-0 z-50 hidden bg-black/80 backdrop-blur-md flex items-center justify-center p-4" onclick="closeModalOnBackdrop(event)">
-        <div class="bg-cyber-panel border border-cyber-blue/50 rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-neon-blue p-6 sm:p-8 relative animate-fadeIn">
-            <button onclick="closeCharacterModal()" class="absolute top-4 right-4 w-10 h-10 rounded-lg bg-slate-800 hover:bg-cyber-red text-white flex items-center justify-center transition-colors">
-                <i class="fa-solid fa-xmark text-lg"></i>
-            </button>
-
-            <div id="modal-content" class="space-y-6">
-                <!-- Contenu injecté dynamiquement -->
-            </div>
-        </div>
-    </div>
-
-    <!-- PIED DE PAGE -->
-    <footer class="border-t border-cyber-border bg-cyber-dark/90 py-6 mt-12">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-slate-400">
-            <div class="flex items-center gap-2">
-                <i class="fa-solid fa-shield-halved text-cyber-blue"></i>
-                <span><strong>SKIBIDI.FR</strong> — Portail communautaire francophone non officiel.</span>
-            </div>
-            <div>
-                Univers original créé par <span class="text-cyber-gold font-semibold">DaFuq!?Boom!</span> • Interface Cyber-Archives FR.
-            </div>
-        </div>
+    <!-- Footer -->
+    <footer class="mt-16 border-t border-fandom-border bg-fandom-panel/50 py-6 text-center text-[11px] text-slate-500 font-cyber">
+        <p>SKIBIDI TOILET WIKI (FR) — Basé sur l'encyclopédie officielle de skibidi-toilet.fandom.com</p>
     </footer>
 
-    <!-- LOGIQUE JAVASCRIPT COMPLÈTE -->
+    <!-- Scripts & Logic -->
     <script>
-        // =========================================================================
-        // BASE DE DONNÉES COMPLÈTE DES PERSONNAGES (70+ Unités, Spéciaux et Secrets)
-        // =========================================================================
-        const charactersData = [
-            {
-                id: 'skibidi-normal',
-                name: 'Skibidi Toilet Standard',
-                faction: 'skibidi',
-                factionLabel: 'Skibidi Toilet',
-                firstAppearance: 'Épisode 1',
-                episodeNum: 1,
-                role: 'Infanterie de Base / Unité Virale',
-                powerLevel: 15,
-                status: 'Actif / Nombreux',
-                statusColor: 'text-amber-400',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/f/f9/Skibidi_Toilet_1.png',
-                physicalDescription: 'Buste d\'un homme chauve aux yeux exorbités et au cou élargi, émergeant d\'une cuvette en céramique blanche standard.',
-                summary: 'L\'unité originelle à l\'origine du phénomène planétaire. Un buste humain chantant l\'hymne viral depuis une cuvette.',
-                stats: { force: 15, vitesse: 30, resistance: 10 },
-                abilities: [
-                    'Chant hypnose de propagation virale',
-                    'Mouvement rapide par glissement au sol',
-                    'Attaque frontale par morsure et bélier'
-                ]
+        // Base de données exhaustive et enrichie de tous les personnages de l'univers Skibidi Toilet (Tailles réelles et officielles mises à jour)
+        const characters = [
+            // --- ALLIANCE & CAMERAMEN ---
+            { 
+                name: "POV Cameraman", faction: "The Alliance", ep: "Épisode 1 - Présent", status: "Vivant (Actif)", size: "1.85 m", role: "Soldat Standard / Observateur", 
+                importance: "Essentiel", upgraded: "Aucune", armed: "Oui (Pistolet laser compact)",
+                avatar: `<svg class="w-12 h-12 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="12" rx="2"/><circle cx="10" cy="12" r="3"/><path d="M17 14l4 3V7l-4 3z"/></svg>`,
+                desc: "Le tout premier soldat et témoin de l'Alliance, chargé d'enregistrer sur le terrain les affrontements directs contre les premières vagues de toilettes.", 
+                cap: ["Enregistrement tactique", "Tir laser courte portée"], equip: "Caméra analogique standard, costume noir, micro directionnel" 
             },
-            {
-                id: 'pov-cameraman',
-                name: 'POV Cameraman',
-                faction: 'alliance',
-                factionLabel: 'L\'Alliance (Cameraman)',
-                firstAppearance: 'Épisode 3',
-                episodeNum: 3,
-                role: 'Soldat d\'Infanterie Standard',
-                powerLevel: 25,
-                status: 'Actif',
-                statusColor: 'text-cyber-blue',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/7/7b/Cameraman_render.png',
-                physicalDescription: 'Humanoïde vêtu d\'un costume-cravate noir soigné, portant une caméra de surveillance analogique noire à la place de la tête.',
-                summary: 'Le soldat de base de l\'Alliance portant un costume-cravate et une caméra de surveillance à la place de la tête.',
-                stats: { force: 25, vitesse: 40, resistance: 20 },
-                abilities: [
-                    'Enregistrement tactique en direct',
-                    'Armement standard au poing et pistolet laser',
-                    'Résistance de groupe face aux vagues'
-                ]
+            { 
+                name: "Large Cameraman", faction: "The Alliance", ep: "Épisode 10 - Présent", status: "Vivant", size: "3.40 m", role: "Infanterie Lourde", 
+                importance: "Important", upgraded: "Blindage renforcé", armed: "Oui (Blaster d'assaut lourd)",
+                avatar: `<svg class="w-12 h-12 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>`,
+                desc: "Une unité massive et puissante conçue pour encaisser les charges frontales des ennemis de taille moyenne.", 
+                cap: ["Encaissement de dégâts massifs", "Puissance de feu lourde"], equip: "Armure lourde renforcée, blaster d'assaut thermique" 
             },
-            {
-                id: 'skibidi-police',
-                name: 'Skibidi Toilet Policier',
-                faction: 'skibidi',
-                factionLabel: 'Skibidi Toilet',
-                firstAppearance: 'Épisode 4',
-                episodeNum: 4,
-                role: 'Unité Blindée Légère',
-                powerLevel: 30,
-                status: 'Actif',
-                statusColor: 'text-amber-400',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/2/22/Police_Skibidi_Toilet.png',
-                physicalDescription: 'Skibidi Toilet standard coiffé d\'un casque de police anti-émeute bleu foncé et d\'une visière de protection en polycarbonate.',
-                summary: 'Variante portant un casque de police anti-émeute, offrant une protection accrue contre les tirs de l\'Alliance.',
-                stats: { force: 30, vitesse: 35, resistance: 35 },
-                abilities: [
-                    'Casque anti-émeute blindé',
-                    'Charge frontale renforcée',
-                    'Résistance accrue au premier tir'
-                ]
+            { 
+                name: "Upgraded Titan Cameraman", faction: "The Alliance", ep: "Épisode 65 - Présent", status: "Vivant", size: "45.00 m", role: "Titan Suprême", 
+                importance: "Majeur", upgraded: "Canon plasma dorsal, réacteurs spatiaux", armed: "Oui (Arsenal lourd complet)",
+                avatar: `<svg class="w-12 h-12 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/></svg>`,
+                desc: "Le summum technologique et guerrier de l'Alliance doté d'une puissance de feu titanesque.", 
+                cap: ["Canon plasma dorsal", "Bouclier énergétique", "Vol spatial"], equip: "Noyau central, canon plasma, marteau gravitationnel" 
             },
-            {
-                id: 'skibidi-triplets',
-                name: 'Skibidi Triplets (Géants)',
-                faction: 'skibidi',
-                factionLabel: 'Skibidi Toilet',
-                firstAppearance: 'Épisode 5',
-                episodeNum: 5,
-                role: 'Infanterie Lourde Multiple',
-                powerLevel: 40,
-                status: 'Actif',
-                statusColor: 'text-amber-400',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/c/c5/Large_Skibidi_Toilet_Ep_5.png',
-                physicalDescription: 'Trois têtes d\'hommes identiques montées en grappe sur une cuvette élargie et renforcée de structures métalliques de fortune.',
-                summary: 'Trois têtes partageant une structure de toilettes élargie, augmentant leur force de frappe combinée.',
-                stats: { force: 45, vitesse: 25, resistance: 40 },
-                abilities: [
-                    'Triple champ de vision et chant polyphonique',
-                    'Masse corporelle écrasante',
-                    'Coordination d\'attaque simultanée'
-                ]
+            { 
+                name: "Plungerman", faction: "The Alliance", ep: "Épisode 39 - Épisode 72", status: "Mort (Épisode 72)", size: "1.80 m", role: "Commando d'Élite", 
+                importance: "Majeur", upgraded: "Jetpack compact, ventouses modifiées", armed: "Oui (Double ventouses)",
+                avatar: `<svg class="w-12 h-12 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/></svg>`,
+                desc: "Célèbre pour sa bravoure légendaire et ses acrobaties téméraires au cœur du territoire ennemi.", 
+                cap: ["Agilité extrême", "Sabotage rapide"], equip: "Double ventouses tactiques, hache de combat" 
             },
-            {
-                id: 'dj-skibidi',
-                name: 'DJ Skibidi Toilet',
-                faction: 'skibidi',
-                factionLabel: 'Skibidi Toilet',
-                firstAppearance: 'Épisode 6',
-                episodeNum: 6,
-                role: 'Unité de Soutien Sonore',
-                powerLevel: 38,
-                status: 'Actif',
-                statusColor: 'text-amber-400',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/8/89/DJ_Skibidi_Toilet.png',
-                physicalDescription: 'Skibidi Toilet affublé de larges écouteurs DJ lumineux et de platines audio fixées sur les rebords de la cuvette.',
-                summary: 'Équipé de casques audio massifs, il diffuse des ondes sonores amplifiées pour désorienter les Cameramen.',
-                stats: { force: 35, vitesse: 35, resistance: 35 },
-                abilities: [
-                    'Ondes sonores de brouillage',
-                    'Amplification du moral Skibidi',
-                    'Résistance aux attaques acoustiques'
-                ]
+            { 
+                name: "Camerawoman", faction: "The Alliance", ep: "Épisode 52 - Présent", status: "Vivant", size: "1.75 m", role: "Opératrice Spéciale", 
+                importance: "Important", upgraded: "Vision nocturne et thermique", armed: "Oui (Pistolet-mitrailleur)",
+                avatar: `<svg class="w-12 h-12 text-pink-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg>`,
+                desc: "Spécialiste redoutable de l'infiltration discrète et des sauvetages audacieux.", 
+                cap: ["Discrétion optique", "Tir en mouvement"], equip: "Pistolet-mitrailleur compact, caméra renforcée" 
             },
-            {
-                id: 'g-toilet-v1',
-                name: 'G-Toilet (G-Man Toilette - V1)',
-                faction: 'skibidi',
-                factionLabel: 'Skibidi Toilet',
-                firstAppearance: 'Épisode 7',
-                episodeNum: 7,
-                role: 'Chef Suprême des Skibidi Toilets',
-                powerLevel: 92,
-                status: 'Actif / En fuite tactique',
-                statusColor: 'text-cyber-red',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/3/36/G-Toilet_Ep_7.png',
-                physicalDescription: 'Buste massif aux traits de visage prononcés, équipé de propulseurs à réaction dorsaux et de canons lasers oculaires.',
-                summary: 'Le chef charismatique des Skibidi Toilets. Doté de lasers oculaires redoutables et d\'une immense résistance.',
-                stats: { force: 92, vitesse: 60, resistance: 90 },
-                abilities: [
-                    'Lasers oculaires haute puissance',
-                    'Vol par propulsion arrière',
-                    'Tactiques de commandement impitoyables'
-                ]
+            { 
+                name: "Cameraman 1056", faction: "The Alliance", ep: "Épisode 18 - Présent", status: "Vivant", size: "1.85 m", role: "Soldat de Reconnaissance", 
+                importance: "Mineur", upgraded: "Lentille anti-reflet", armed: "Oui (Pistolet laser)",
+                avatar: `<svg class="w-12 h-12 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="12" rx="2"/><circle cx="10" cy="12" r="3"/></svg>`,
+                desc: "Un opérateur de terrain assigné aux patrouilles des zones urbaines secondaires.", 
+                cap: ["Reconnaissance rapide"], equip: "Caméra standard, pistolet laser léger" 
             },
-            {
-                id: 'speaker-man',
-                name: 'Speakerman Standard',
-                faction: 'alliance',
-                factionLabel: 'L\'Alliance (Speakerman)',
-                firstAppearance: 'Épisode 11',
-                episodeNum: 11,
-                role: 'Infanterie Sonore Agile',
-                powerLevel: 35,
-                status: 'Actif',
-                statusColor: 'text-cyber-blue',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/4/4b/Speakerman_render.png',
-                physicalDescription: 'Corps svelte vêtu de cuir noir, surmonté d\'un haut-parleur stéréo moderne pivotant à la place de la tête.',
-                summary: 'Membres de l\'Alliance dotés d\'enceintes hifi à la place de la tête. Extrêmement agiles et adeptes de la danse au combat.',
-                stats: { force: 35, vitesse: 70, resistance: 25 },
-                abilities: [
-                    'Ondes sonores directionnelles perçantes',
-                    'Agilité et réflexes accrus',
-                    'Résistance au contrôle mental de base'
-                ]
+            { 
+                name: "Cameraman 1K34", faction: "The Alliance", ep: "Épisode 22 - Présent", status: "Vivant", size: "1.85 m", role: "Unité de Ligne", 
+                importance: "Mineur", upgraded: "Bouclier énergétique portable", armed: "Oui (Fusil laser)",
+                avatar: `<svg class="w-12 h-12 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="16" height="14" rx="2"/><line x1="6" y1="9" x2="14" y2="9"/></svg>`,
+                desc: "Combattant chevronné ayant participé aux grandes batailles de tranchées contre l'infanterie Skibidi.", 
+                cap: ["Tir de couverture"], equip: "Fusil laser d'infanterie, petit bouclier" 
             },
-            {
-                id: 'skibidi-scientist',
-                name: 'Skibidi Toilet Scientifique (Docteur Skibidi)',
-                faction: 'skibidi',
-                factionLabel: 'Skibidi Toilet',
-                firstAppearance: 'Épisode 12',
-                episodeNum: 12,
-                role: 'Ingénieur en Chef / Concepteur de Cyber-Implants',
-                powerLevel: 85,
-                status: 'Éliminé au Bunker (Ép. 67)',
-                statusColor: 'text-slate-500',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/5/5a/Scientist_Skibidi_Toilet.png',
-                physicalDescription: 'Skibidi Toilet âgé doté de lunettes de laboratoire à verres multiples et de bras mécaniques secondaires articulés.',
-                summary: 'Le cerveau scientifique des Toilets, responsable de la création des parasites, des mutants et des améliorations de G-Toilet.',
-                stats: { force: 75, vitesse: 40, resistance: 80 },
-                abilities: [
-                    'Invention de technologies d\'infection',
-                    'Bras bioniques d\'ingénierie lourde',
-                    'Calculs tactiques de pointe'
-                ]
+            { 
+                name: "CH4D Cameraman", faction: "The Alliance", ep: "Épisode 45 - Présent", status: "Vivant", size: "2.10 m", role: "Élite Musclée", 
+                importance: "Secondaire", upgraded: "Châssis renforcé", armed: "Oui (Canon à plasma lourd)",
+                avatar: `<svg class="w-12 h-12 text-blue-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H7"/></svg>`,
+                desc: "Une version physiquement hypertrophiée et redoutable d'un Cameraman d'élite.", 
+                cap: ["Force surhumaine", "Blindage corporel"], equip: "Canon plasma portatif lourd, armure en titane" 
             },
-            {
-                id: 'skibidi-hydra',
-                name: 'Skibidi Hydra (Multitête Géant)',
-                faction: 'skibidi',
-                factionLabel: 'Skibidi Toilet',
-                firstAppearance: 'Épisode 13',
-                episodeNum: 13,
-                role: 'Unité de Siège Multi-Têtes',
-                powerLevel: 55,
-                status: 'Détruit',
-                statusColor: 'text-slate-500',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/6/67/Hydra_Skibidi_Toilet.png',
-                physicalDescription: 'Grande cuvette supportant une colonne centrale sur laquelle s\'articulent cinq têtes hurlantes.',
-                summary: 'Variante redoutable comportant cinq têtes montées sur des cous extensibles, capable de couvrir un angle de tir à 360 degrés.',
-                stats: { force: 60, vitesse: 30, resistance: 50 },
-                abilities: [
-                    'Vision périphérique totale à 360°',
-                    'Chant assourdissant combiné',
-                    'Attaques simultanées multiples'
-                ]
+            { 
+                name: "Chef Cameraman", faction: "The Alliance", ep: "Épisode 31 - Présent", status: "Vivant", size: "1.85 m", role: "Logistique & Ravitaillement", 
+                importance: "Secondaire", upgraded: "Outils de réparation rapide", armed: "Non (Ustensiles)",
+                avatar: `<svg class="w-12 h-12 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 13.87A4 4 0 1 1 12 10v9a2 2 0 0 1-4 0v-4H6z"/><path d="M16 2v4M18 4h-4"/></svg>`,
+                desc: "Assure le soutien logistique, les rations et la maintenance des équipements de base de l'Alliance.", 
+                cap: ["Maintenance rapide", "Logistique"], equip: "Chapeau de cuisinier, kit de réparation" 
             },
-            {
-                id: 'plungerman',
-                name: 'Plungerman (Agent d\'Élite)',
-                faction: 'alliance',
-                factionLabel: 'L\'Alliance (Cameraman)',
-                firstAppearance: 'Épisode 14',
-                episodeNum: 14,
-                role: 'Commando d\'Élite',
-                powerLevel: 75,
-                status: 'Mort au combat (Héros du Bunker)',
-                statusColor: 'text-slate-500',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/1/18/Plungerman_render.png',
-                physicalDescription: 'Cameraman agile équipé d\'un harnais tactique, de lunettes de vision nocturne et de deux ventouses rouges magnétiques.',
-                summary: 'Cameraman intrépide armé de ventouses et de couteaux. Devenu une légende vivante avant son sacrifice héroïque dans le bunker.',
-                stats: { force: 75, vitesse: 90, resistance: 70 },
-                abilities: [
-                    'Agilité extrême en combat rapproché',
-                    'Ventouses magnétiques multi-usages',
-                    'Détermination sans faille'
-                ]
+            { 
+                name: "Detective Cameraman", faction: "The Alliance", ep: "Épisode 41 - Présent", status: "Vivant", size: "1.88 m", role: "Enquêteur & Espion", 
+                importance: "Important", upgraded: "Loupe optique de haute précision", armed: "Oui (Pistolet silencieux)",
+                avatar: `<svg class="w-12 h-12 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>`,
+                desc: "Spécialisé dans l'analyse des scènes de crime, indices laissés par le Secret Agent et repérage des pièges.", 
+                cap: ["Analyse criminalistique", "Discrétion totale"], equip: "Imperméable, loupe optique laser, pistolet discret" 
             },
-            {
-                id: 'large-cameraman',
-                name: 'Large Cameraman (Grand Cameraman)',
-                faction: 'alliance',
-                factionLabel: 'L\'Alliance (Cameraman)',
-                firstAppearance: 'Épisode 18',
-                episodeNum: 18,
-                role: 'Infanterie Lourde / Garde du Corps',
-                powerLevel: 50,
-                status: 'Actif',
-                statusColor: 'text-cyber-blue',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/e/e4/Large_Cameraman.png',
-                physicalDescription: 'Cameraman au gabarit imposant (plus de 2,50 mètres), vêtu d\'un costume renforcé et d\'armes lourdes.',
-                summary: 'Soldats d\'élite robustes capables de tenir tête aux Skibidi Toilets de taille moyenne grâce à leur puissance de feu.',
-                stats: { force: 65, vitesse: 40, resistance: 60 },
-                abilities: [
-                    'Port d\'armes lourdes à plasma',
-                    'Résistance physique accrue aux chocs',
-                    'Protection rapprochée des VIP'
-                ]
+            { 
+                name: "Engineer Cameraman", faction: "The Alliance", ep: "Épisode 29 - Présent", status: "Vivant", size: "1.90 m", role: "Ingénieur de Combat", 
+                importance: "Important", upgraded: "Bras mécaniques multifonctions", armed: "Oui (Chalumeau plasma)",
+                avatar: `<svg class="w-12 h-12 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+                desc: "Conçoit les fortifications, répare les véhicules endommagés et déploie les tourelles de défense.", 
+                cap: ["Construction rapide", "Réparation lourde"], equip: "Clé à molette géante, chalumeau plasma, casque d'ingénieur" 
             },
-            {
-                id: 'titan-cameraman',
-                name: 'Titan Cameraman (V1)',
-                faction: 'alliance',
-                factionLabel: 'L\'Alliance (Titan)',
-                firstAppearance: 'Épisode 20',
-                episodeNum: 20,
-                role: 'Super Arme de l\'Alliance',
-                powerLevel: 95,
-                status: 'Endommagé / En réparation',
-                statusColor: 'text-cyber-blue',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/b/b2/Titan_Cameraman.png',
-                physicalDescription: 'Gigantesque mécha humanoïde blindé d\'acier gris, arborant une caméra de haute précision et un canon dorsal.',
-                summary: 'Le premier Titan construit par l\'Alliance. Armé d\'un canon à plasma dorsal et d\'une résistance colossale.',
-                stats: { force: 95, vitesse: 65, resistance: 95 },
-                abilities: [
-                    'Canon à plasma lourd dorsal',
-                    'Bouclier énergétique renforcé',
-                    'Force physique surhumaine'
-                ]
+            { 
+                name: "Floral Tied Medic Cameraman", faction: "The Alliance", ep: "Épisode 35 - Présent", status: "Vivant", size: "1.85 m", role: "Médecin de Ligne", 
+                importance: "Secondaire", upgraded: "Seringues nanotechnologiques", armed: "Non (Kit médical)",
+                avatar: `<svg class="w-12 h-12 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20"/><circle cx="12" cy="12" r="3"/></svg>`,
+                desc: "Reconnaissable à sa cravate à motifs floraux, il soigne et répare les soldats blessés au combat.", 
+                cap: ["Soin par nanobots", "Résistance aux radiations"], equip: "Cravate florale, trousse de secours avancée" 
             },
-            {
-                id: 'secret-agent',
-                name: 'L\'Agent Secret (The Observer)',
-                faction: 'inconnu',
-                factionLabel: 'Entité Mystérieuse',
-                firstAppearance: 'Épisode 24',
-                episodeNum: 24,
-                role: 'Observateur / Manipulateur Dimensionnel',
-                powerLevel: 100,
-                status: 'Actif / Omniprésent',
-                statusColor: 'text-emerald-400',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/9/91/Secret_Agent_Skibidi.png',
-                physicalDescription: 'Homme mystérieux en costume-cravate impeccable, portant des lunettes de soleil munies de verres lumineux multicolores.',
-                summary: 'Personnage énigmatique en costume sombre et lunettes lumineuses. Il manipule les ficelles du conflit dans l\'ombre.',
-                stats: { force: 100, vitesse: 100, resistance: 100 },
-                abilities: [
-                    'Arrêt et manipulation du temps',
-                    'Téléportation interdimensionnelle',
-                    'Contrôle occulte des factions'
-                ]
+            { 
+                name: "Blue Shirted Large Cameraman", faction: "The Alliance", ep: "Épisode 25 - Présent", status: "Vivant", size: "3.40 m", role: "Infanterie Lourde Spéciale", 
+                importance: "Secondaire", upgraded: "Chemise blindée en kevlar bleu", armed: "Oui (Mitrailleuse lourde)",
+                avatar: `<svg class="w-12 h-12 text-cyan-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 7h-4V4c0-1.1-.9-2-2-2h-4c-1.1 0-2 .9-2 2v3H4c-1.1 0-2 .9-2 2v11c0 1.1.9 2 2 2h16c1.1 0-2-.9-2-2V9c0-1.1-.9-2-2-2z"/></svg>`,
+                desc: "Une variante de Large Cameraman portant une chemise bleue distinctive sous son armure.", 
+                cap: ["Robustesse", "Puissance de feu"], equip: "Chemise bleue renforcée, mitrailleuse lourde" 
             },
-            {
-                id: 'titan-speakerman',
-                name: 'Titan Speakerman',
-                faction: 'alliance',
-                factionLabel: 'L\'Alliance (Titan)',
-                firstAppearance: 'Épisode 26',
-                episodeNum: 26,
-                role: 'Titan Sonore Supérieur',
-                powerLevel: 96,
-                status: 'Libéré du Parasite / Actif',
-                statusColor: 'text-cyber-blue',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/5/52/Titan_Speakerman.png',
-                physicalDescription: 'Titan élancé doté d\'une immense enceinte centrale en guise de tête, équipé de réacteurs soniques.',
-                summary: 'Second Titan de l\'Alliance, spécialisé dans les attaques sonores de zone à l\'échelle titanesque.',
-                stats: { force: 94, vitesse: 85, resistance: 90 },
-                abilities: [
-                    'Canons sonores soniques géants',
-                    'Lames doubles intégrées',
-                    'Jetpack supersonique'
-                ]
+
+            // --- SPEAKERMEN ---
+            { 
+                name: "Speaker Woman", faction: "The Alliance", ep: "Épisode 28 - Présent", status: "Vivant", size: "1.72 m", role: "Éclaireuse d'Élite", 
+                importance: "Important", upgraded: "Blasters soniques doubles", armed: "Oui (Blasters et lames)",
+                avatar: `<svg class="w-12 h-12 text-orange-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/></svg>`,
+                desc: "Extrêmement agile, elle utilise des ondes sonores focalisées et des mouvements acrobatiques.", 
+                cap: ["Blaster sonique", "Combat acrobatique"], equip: "Blasters sonores doubles, lames de poignet" 
             },
-            {
-                id: 'skibidi-parasite',
-                name: 'Skibidi Toilet Parasite',
-                faction: 'skibidi',
-                factionLabel: 'Skibidi Toilet',
-                firstAppearance: 'Épisode 29',
-                episodeNum: 29,
-                role: 'Unité d\'Infection Neuronale',
-                powerLevel: 45,
-                status: 'Actif',
-                statusColor: 'text-amber-400',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/3/3f/Skibidi_Parasite.png',
-                physicalDescription: 'Minuscule tête de Skibidi Toilet dotée de pattes arachnides acérées, conçue pour s\'accrocher à la nuque des membres de l\'Alliance.',
-                summary: 'Petite créature parasite capable de s\'accrocher à la tête des membres de l\'Alliance pour les corrompre.',
-                stats: { force: 30, vitesse: 85, resistance: 20 },
-                abilities: [
-                    'Prise de contrôle neuronale des unités',
-                    'Agilité et camouflage de furtivité',
-                    'Morsure d\'injection rapide'
-                ]
+            { 
+                name: "Upgraded Titan Speakerman", faction: "The Alliance", ep: "Épisode 57 - Présent", status: "Vivant", size: "40.00 m", role: "Titan Sonique", 
+                importance: "Majeur", upgraded: "Canons sonores géants aux bras", armed: "Oui (Canons sonores)",
+                avatar: `<svg class="w-12 h-12 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/></svg>`,
+                desc: "Libéré de l'emprise parasite, il canalise toute sa puissance acoustique pour raser les ennemis.", 
+                cap: ["Canons soniques destructeurs", "Vol"], equip: "Canons soniques géants intégrés aux bras" 
             },
-            {
-                id: 'large-speakerman',
-                name: 'Large Speakerman (Grand Speakerman)',
-                faction: 'alliance',
-                factionLabel: 'L\'Alliance (Speakerman)',
-                firstAppearance: 'Épisode 33',
-                episodeNum: 33,
-                role: 'Infanterie Sonore Lourde',
-                powerLevel: 55,
-                status: 'Actif',
-                statusColor: 'text-cyber-blue',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/e/e0/Large_Speakerman.png',
-                physicalDescription: 'Speakerman robuste et musclé, équipé de doubles haut-parleurs orientables sur les épaules.',
-                summary: 'Unités de soutien lourd chez les Speakermen, capables de projeter des ondes de choc capables de renverser des cuvettes.',
-                stats: { force: 60, vitesse: 60, resistance: 55 },
-                abilities: [
-                    'Ondes de choc sonores directionnelles',
-                    'Résistance au corps à corps',
-                    'Soutien tactique d\'infanterie'
-                ]
+            { 
+                name: "Large Speakerman", faction: "The Alliance", ep: "Épisode 26 - Présent", status: "Vivant", size: "3.30 m", role: "Unité Sonore Lourde", 
+                importance: "Important", upgraded: "Haut-parleur stéréo pivotant", armed: "Oui (Ondes de basse)",
+                avatar: `<svg class="w-12 h-12 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="4" y="2" width="16" height="20" rx="2"/><circle cx="12" cy="14" r="4"/></svg>`,
+                desc: "Diffuse des fréquences de basses capables de faire vibrer et éclater les céramiques ennemies.", 
+                cap: ["Vagues de basse"], equip: "Haut-parleur stéréo géant, armure lourde" 
             },
-            {
-                id: 'tv-man-standard',
-                name: 'TV Man Standard',
-                faction: 'alliance',
-                factionLabel: 'L\'Alliance (TV Man)',
-                firstAppearance: 'Épisode 39',
-                episodeNum: 39,
-                role: 'Unité Spéciale Hypnotique',
-                powerLevel: 65,
-                status: 'Actif',
-                statusColor: 'text-cyber-blue',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/8/87/TV_Man_render.png',
-                physicalDescription: 'Silhouette élégante vêtue d\'un long pardessus noir, arborant un téléviseur cathodique vintage.',
-                summary: 'Unités mystérieuses dotées d\'écrans cathodiques capables d\'hypnotiser et de désintégrer les ennemis par la lumière rouge.',
-                stats: { force: 60, vitesse: 50, resistance: 60 },
-                abilities: [
-                    'Rayon hypnotique de désintégration',
-                    'Téléportation instantanée par fumée noire',
-                    'Langage inversé crypté'
-                ]
+            { 
+                name: "Dark Speakerman", faction: "The Alliance", ep: "Épisode 25 - Épisode 67", status: "Disparu / Détruit", size: "1.82 m", role: "Vétéran Furtif", 
+                importance: "Important", upgraded: "Équipements de camouflage sombre", armed: "Oui (Blaster lourd)",
+                avatar: `<svg class="w-12 h-12 text-zinc-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+                desc: "Un combattant d'élite ayant opéré aux côtés de Plungerman dans les missions les plus périlleuses.", 
+                cap: ["Furtivité", "Tirs précis"], equip: "Blaster noir renforcé, costume sombre" 
             },
-            {
-                id: 'titan-tv-man',
-                name: 'Titan TV Man (Cinema Man)',
-                faction: 'alliance',
-                factionLabel: 'L\'Alliance (Titan)',
-                firstAppearance: 'Épisode 44',
-                episodeNum: 44,
-                role: 'Titan Suprême de l\'Alliance',
-                powerLevel: 99,
-                status: 'Actif / Commandant',
-                statusColor: 'text-cyber-blue',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/d/df/Titan_TV_Man.png',
-                physicalDescription: 'Colosse imposant composé d\'écrans modulaires pivotants à 360 degrés, armé d\'une épée à plasma.',
-                summary: 'Le plus puissant des Titans de l\'Alliance. Capable de projeter des lumières UV mortelles et de manipuler la gravité.',
-                stats: { force: 99, vitesse: 80, resistance: 98 },
-                abilities: [
-                    'Écrans multiples aveuglants et hypnotiques',
-                    'Épée à plasma incandescente',
-                    'Bouclier d\'énergie cinétique'
-                ]
+            { 
+                name: "DJ Speakerman", faction: "The Alliance", ep: "Épisode 33 - Présent", status: "Vivant", size: "3.20 m", role: "Soutien Acoustique & Moral", 
+                importance: "Secondaire", upgraded: "Table de mixage de combat portable", armed: "Oui (Ondes rythmiques)",
+                avatar: `<svg class="w-12 h-12 text-orange-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 18V5l12-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="18" cy="16" r="3"/></svg>`,
+                desc: "Diffuse des rythmes entraînants pour stimuler le moral des troupes alliées et perturber l'ennemi.", 
+                cap: ["Brouillage d'ondes", "Buff de moral"], equip: "Casque DJ, table de mixage embarquée" 
             },
-            {
-                id: 'buzzsaw-mutant',
-                name: 'Buzzsaw Mutant Toilet',
-                faction: 'skibidi',
-                factionLabel: 'Skibidi Toilet (Mutant)',
-                firstAppearance: 'Épisode 50',
-                episodeNum: 50,
-                role: 'Combattant Cyborg d\'Assaut',
-                powerLevel: 72,
-                status: 'Actif',
-                statusColor: 'text-amber-400',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/4/47/Buzzsaw_Mutant.png',
-                physicalDescription: 'Corps hybride doté d\'un torse humain musclé greffé à une cuvette propulsée, armé de scies circulaires.',
-                summary: 'L\'un des premiers mutants hybrides cyborgs créés par le Scientifique, combinant la mobilité d\'un corps humain et la férocité Skibidi.',
-                stats: { force: 75, vitesse: 70, resistance: 65 },
-                abilities: [
-                    'Mains équipées de scies circulaires mortelles',
-                    'Mobilité hybride sol/air',
-                    'Corps cyborg hautement résistant'
-                ]
+            { 
+                name: "Brave Large Speakerman", faction: "The Alliance", ep: "Épisode 37 - Présent", status: "Vivant", size: "3.35 m", role: "Commandant de Ligne Sonore", 
+                importance: "Secondaire", upgraded: "Haut-parleurs frontaux renforcés", armed: "Oui (Canon à impulsion basse)",
+                avatar: `<svg class="w-12 h-12 text-yellow-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5 4 2 7-7-4-7 4 2-7-5-4h7z"/></svg>`,
+                desc: "Unité courageuse n'hésitant pas à se placer en première ligne pour protéger les soldats standards.", 
+                cap: ["Résistance aux ondes ennemies"], equip: "Haut-parleurs blindés, canon à impulsion" 
             },
-            {
-                id: 'berserker-mutant',
-                name: 'Berserker Mutant Toilet',
-                faction: 'skibidi',
-                factionLabel: 'Skibidi Toilet (Mutant)',
-                firstAppearance: 'Épisode 53',
-                episodeNum: 53,
-                role: 'Combattant Berserker Lourd',
-                powerLevel: 78,
-                status: 'Actif',
-                statusColor: 'text-amber-400',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/0/03/Berserker_Mutant.png',
-                physicalDescription: 'Mutant massif aux bras surdéveloppés, portant des gantelets d\'acier brut et des propulseurs dorsaux.',
-                summary: 'Variante berserker ultra-agressive des mutants Skibidi, spécialisée dans le corps à corps destructeur.',
-                stats: { force: 85, vitesse: 60, resistance: 75 },
-                abilities: [
-                    'Fureur berserker en combat',
-                    'Coups de poing dévastateurs',
-                    'Charge propulsée irrésistible'
-                ]
+            { 
+                name: "Engineer Speakerman", faction: "The Alliance", ep: "Épisode 47 - Présent", status: "Vivant", size: "1.85 m", role: "Technicien Sonore", 
+                importance: "Secondaire", upgraded: "Outils de calibrage acoustique", armed: "Oui (Pistolet sonique)",
+                avatar: `<svg class="w-12 h-12 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>`,
+                desc: "Répare et calibre les haut-parleurs des titans et des grands speakermen sur le terrain.", 
+                cap: ["Calibrage audio rapide"], equip: "Clé à résonance, pistolet sonique léger" 
             },
-            {
-                id: 'astro-assailant',
-                name: 'Astro Assailant Toilet',
-                faction: 'astro',
-                factionLabel: 'Astro Toilet',
-                firstAppearance: 'Épisode 58',
-                episodeNum: 58,
-                role: 'Commandant de Reconnaissance Astro',
-                powerLevel: 88,
-                status: 'Actif',
-                statusColor: 'text-cyber-red',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/9/98/Astro_Assailant.png',
-                physicalDescription: 'Cuvette aérodynamique futuriste en titane noir, entourée d\'un anneau de lévitation circulaire lumineux.',
-                summary: 'Officier supérieur de la flotte Astro. Doté d\'un anneau énergétique circulaire et d\'une vitesse de distorsion fulgurante.',
-                stats: { force: 88, vitesse: 95, resistance: 85 },
-                abilities: [
-                    'Déplacement en distorsion Warp',
-                    'Canon laser latéral à haute cadence',
-                    'Bouclier orbital personnel'
-                ]
+
+            // --- TV MEN ---
+            { 
+                name: "TV Man Standard", faction: "The Alliance", ep: "Épisode 34 - Présent", status: "Vivant", size: "1.90 m", role: "Unité Hypnotique", 
+                importance: "Majeur", upgraded: "Téléportation courte distance", armed: "Oui (Lumière rouge hypnotique)",
+                avatar: `<svg class="w-12 h-12 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="15" rx="2"/><polyline points="17 2 12 7 7 2"/></svg>`,
+                desc: "Capable de paralyser, d'éblouir et de forcer les ennemis à s'auto-détruire par la lumière de son écran.", 
+                cap: ["Lumière rouge hypnotique", "Téléportation"], equip: "Écran cathodique couleur, costume sombre" 
             },
-            {
-                id: 'astro-detainer',
-                name: 'Astro Detainer Toilet',
-                faction: 'astro',
-                factionLabel: 'Astro Toilet',
-                firstAppearance: 'Épisode 65',
-                episodeNum: 65,
-                role: 'Intercepteur Lourd / Juge',
-                powerLevel: 94,
-                status: 'Actif',
-                statusColor: 'text-cyber-red',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/5/52/Astro_Detainer.png',
-                physicalDescription: 'Unité Astro massive dotée de bras mécaniques articulés complexes générant des champs magnétiques bleus.',
-                summary: 'Redoutable guerrier Astro armé de bras gravitationnels capables de capturer et renvoyer les projectiles ennemis.',
-                stats: { force: 94, vitesse: 90, resistance: 92 },
-                abilities: [
-                    'Champs de capture gravitationnels',
-                    'Bras bioniques multifonctions mortels',
-                    'Vitesse hypersonique en vol'
-                ]
+            { 
+                name: "Upgraded Titan TV Man", faction: "The Alliance", ep: "Épisode 73 - Présent", status: "Vivant", size: "48.00 m", role: "Titan TV Suprême", 
+                importance: "Majeur", upgraded: "Écrans multiples rotatifs, bouclier cinétique", armed: "Oui (Lame géante)",
+                avatar: `<svg class="w-12 h-12 text-violet-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 15 8 22 9 17 14 18 21 12 18 5 21 7 14 2 9 9 8 12 2"/></svg>`,
+                desc: "Le titan le plus mystérieux et redoutable de l'Alliance doté d'écrans multiples destructeurs.", 
+                cap: ["Affichage multi-écran", "Lame géante", "Bouclier cinétique"], equip: "Écrans multiples, lame géante, bouclier cinétique" 
             },
-            {
-                id: 'astro-mothership',
-                name: 'Astro Mothership',
-                faction: 'astro',
-                factionLabel: 'Astro Toilet',
-                firstAppearance: 'Épisode 74',
-                episodeNum: 74,
-                role: 'Vaisseau Amiral Suprême',
-                powerLevel: 100,
-                status: 'Actif / En approche',
-                statusColor: 'text-cyber-red',
-                imageUrl: 'https://static.wikia.nocookie.net/skibidi-toilet/images/d/d4/Astro_Mothership.png',
-                physicalDescription: 'Forteresse spatiale gigantesque de forme circulaire complexe, émettant des pulsations d\'énergie rouge sang.',
-                summary: 'Le gigantesque vaisseau-mère de l\'Empire Astro Toilet, doté d\'une puissance de feu capable de raser des continents.',
-                stats: { force: 100, vitesse: 40, resistance: 100 },
-                abilities: [
-                    'Rayon d\'annihilation planétaire',
-                    'Bouclier énergétique impénétrable',
-                    'Escadron de chasseurs Astro intégrés'
-                ]
+            { 
+                name: "TV Woman", faction: "The Alliance", ep: "Épisode 44 - Présent", status: "Vivant", size: "1.70 m", role: "Infiltration & Étourdissement", 
+                importance: "Important", upgraded: "Rayons violets étourdissants", armed: "Oui (Écran émetteur)",
+                avatar: `<svg class="w-12 h-12 text-fuchsia-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>`,
+                desc: "Utilise la téléportation et les faisceaux lumineux violets de son écran pour désorienter l'ennemi.", 
+                cap: ["Étourdissement violet", "Téléportation"], equip: "Écran émetteur violet, cape" 
+            },
+            { 
+                name: "Large TV Man", faction: "The Alliance", ep: "Épisode 42 - Présent", status: "Vivant", size: "3.50 m", role: "Unité à Écran Lourd", 
+                importance: "Important", upgraded: "Écran cathodique blindé", armed: "Oui (Onde de paralysie de zone)",
+                avatar: `<svg class="w-12 h-12 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M12 19v3M8 22h8"/></svg>`,
+                desc: "Variante massive et lourdement blindée infligeant de lourds dégâts psychologiques et visuels.", 
+                cap: ["Onde de paralysie de zone", "Force physique"], equip: "Écran géant renforcé, armure noire lourde" 
+            },
+            { 
+                name: "Ceiling TV", faction: "The Alliance", ep: "Épisode 49 - Présent", status: "Vivant", size: "1.10 m", role: "Caméra / Écran de Surveillance Piégé", 
+                importance: "Secondaire", upgraded: "Capteurs de mouvement", armed: "Oui (Lumière d'étourdissement fixe)",
+                avatar: `<svg class="w-12 h-12 text-violet-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v10M4 12h16"/><circle cx="12" cy="16" r="4"/></svg>`,
+                desc: "Dispositif fixé au plafond surveillant les couloirs et piégeant les Skibidi Toilets de passage.", 
+                cap: ["Surveillance fixe", "Piège visuel"], equip: "Boîtier mural, écran cathodique pivotant" 
+            },
+            { 
+                name: "Dark TV Man", faction: "The Alliance", ep: "Épisode 56 - Présent", status: "Vivant", size: "1.88 m", role: "Agent d'Ombre", 
+                importance: "Secondaire", upgraded: "Cape d'invisibilité quantique", armed: "Oui (Lame ténébreuse)",
+                avatar: `<svg class="w-12 h-12 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>`,
+                desc: "Opère dans la pénombre absolue pour éliminer discrètement les commandants ennemis.", 
+                cap: ["Invisibilité", "Frappe silencieuse"], equip: "Cape noire ténébreuse, lame courte" 
+            },
+
+            // --- SKIBIDI TOILETS (Étendus & Fandom List) ---
+            { 
+                name: "Skibidi Toilet Standard", faction: "Skibidi Toilets", ep: "Épisode 1 - Présent", status: "Vivant", size: "1.50 m", role: "Infanterie de Base", 
+                importance: "Essentiel", upgraded: "Aucune", armed: "Non (Morsure)",
+                avatar: `<svg class="w-12 h-12 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 13h10v8H7z"/><path d="M5 9h14a2 2 0 0 0 2-2V5H3v2a2 2 0 0 0 2 2z"/></svg>`,
+                desc: "L'unité antagoniste fondamentale de la série, entonnant le chant viral pour terrifier l'humanité.", 
+                cap: ["Morsure", "Charge rapide"], equip: "Cuvette de toilette standard en céramique" 
+            },
+            { 
+                name: "Boss G-Toilet", faction: "Skibidi Toilets", ep: "Épisode 1 - Présent", status: "Vivant", size: "42.00 m", role: "Leader Suprême", 
+                importance: "Majeur", upgraded: "Implants laser multiples, réacteurs", armed: "Oui (Lasers oculaires)",
+                avatar: `<svg class="w-12 h-12 text-rose-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z"/></svg>`,
+                desc: "Le chef absolu et impitoyable des Skibidi Toilets, bourré d'améliorations cybernétiques.", 
+                cap: ["Lasers oculaires multiples", "Bouclier énergétique"], equip: "Lasers oculaires, réacteurs spatiaux, blindage titane" 
+            },
+            { 
+                name: "Chief Scientist Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 57 - 73", status: "Mort", size: "22.00 m", role: "Cerveau & Inventeur", 
+                importance: "Majeur", upgraded: "Siège mécha multi-bras", armed: "Oui (Canons laser)",
+                avatar: `<svg class="w-12 h-12 text-orange-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M12 2v20"/><circle cx="12" cy="12" r="6"/></svg>`,
+                desc: "Le scientifique fou à l'origine de tous les méchas et des améliorations technologiques.", 
+                cap: ["Mécha à bras multiples", "Barrière d'énergie"], equip: "Siège mécha à bras multiples, bouclier" 
+            },
+            { 
+                name: "Parasite Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 24 - Présent", status: "Vivant", size: "0.35 m", role: "Infiltrateur Neural", 
+                importance: "Important", upgraded: "Tentacules neuronaux", armed: "Non (Piratage mental)",
+                avatar: `<svg class="w-12 h-12 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 7.54 16.6l-2.54-2.6"/></svg>`,
+                desc: "Petite unité vicieuse capable de s'accrocher à la tête des membres de l'Alliance pour en prendre le contrôle.", 
+                cap: ["Contrôle mental"], equip: "Tentacules neuronaux" 
+            },
+            { 
+                name: "Acid Barrel Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 14 - Présent", status: "Vivant", size: "1.80 m", role: "Artillerie Chimique Mobile", 
+                importance: "Secondaire", upgraded: "Barils d'acide renforcés", armed: "Oui (Jet d'acide corrosif)",
+                avatar: `<svg class="w-12 h-12 text-green-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M10 2v20M14 2v20M4 7h16M4 17h16"/></svg>`,
+                desc: "Transporte des barils remplis d'acide hautement corrosif pour dissoudre les obstacles et l'infanterie.", 
+                cap: ["Projection d'acide", "Explosion chimique"], equip: "Cuvette de toilette, barils d'acide toxique" 
+            },
+            { 
+                name: "Armed Camo Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 23 - Présent", status: "Vivant", size: "1.90 m", role: "Infanterie Camouflée", 
+                importance: "Secondaire", upgraded: "Peinture de camouflage urbain", armed: "Oui (Fusil d'assaut)",
+                avatar: `<svg class="w-12 h-12 text-stone-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l10 7v6l-10 7L2 15V9l10-7z"/></svg>`,
+                desc: "Se fond dans le décor urbain grâce à un revêtement spécial avant de surprendre l'Alliance.", 
+                cap: ["Camouflage optique basique"], equip: "Peinture camouflage, fusil d'assaut Skibidi" 
+            },
+            { 
+                name: "Armored Blaster Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 32 - Présent", status: "Vivant", size: "2.40 m", role: "Infanterie Blindée Lourde", 
+                importance: "Secondaire", upgraded: "Plaques de blindage en acier", armed: "Oui (Blaster intégré)",
+                avatar: `<svg class="w-12 h-12 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="3"/></svg>`,
+                desc: "Une cuvette solidement protégée par des plaques d'acier et armée d'un blaster à impulsion.", 
+                cap: ["Blindage frontal résistant"], equip: "Plaques d'acier, blaster intégré sur le rebord" 
+            },
+            { 
+                name: "Assailant Astro Toilet", faction: "Skibidi Toilets", ep: "Épisode 53 - Présent", status: "Vivant", size: "3.50 m", role: "Commandant d'Avant-garde", 
+                importance: "Important", upgraded: "Propulseurs supersoniques", armed: "Oui (Canons laser rapides)",
+                avatar: `<svg class="w-12 h-12 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+                desc: "Un commandant rapide et impitoyable supervisant les premières frappes de reconnaissance.", 
+                cap: ["Vitesse hypersonique", "Tir laser rapide"], equip: "Casque aérodynamique, réacteurs latéraux" 
+            },
+            { 
+                name: "Bonesaw Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 27 - Présent", status: "Vivant", size: "2.10 m", role: "Bourreau Chirurgical", 
+                importance: "Secondaire", upgraded: "Bras mécanique avec scie à os", armed: "Oui (Scie à os rotative)",
+                avatar: `<svg class="w-12 h-12 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 8v8M8 12h8"/></svg>`,
+                desc: "Équipé d'une scie circulaire dentelée fixée sur un bras articulé pour découper les agents.", 
+                cap: ["Coupe rapide de blindage léger"], equip: "Bras articulé, scie à os dentelée" 
+            },
+            { 
+                name: "Camera Toilet", faction: "Skibidi Toilets", ep: "Épisode 11 - Présent", status: "Vivant", size: "1.55 m", role: "Unité de Leurre / Espion", 
+                importance: "Secondaire", upgraded: "Fausse lentille de caméra", armed: "Oui (Pistolet caché)",
+                avatar: `<svg class="w-12 h-12 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 7l-7 5 7 5V7z"/><rect x="1" y="5" width="15" height="14" rx="2"/></svg>`,
+                desc: "Une toilette déguisée avec une fausse caméra pour tromper la vigilance des Cameramen.", 
+                cap: ["Duperie", "Emboscade"], equip: "Cuvette, fausse caméra de surveillance piégée" 
+            },
+            { 
+                name: "Decoy G-Toilet", faction: "Skibidi Toilets", ep: "Épisode 47 - Épisode 62", status: "Détruit", size: "42.00 m", role: "Leurre Tactique", 
+                importance: "Important", upgraded: "Projection holographique et lasers factices", armed: "Oui (Lasers factices)",
+                avatar: `<svg class="w-12 h-12 text-rose-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 6 7 1-5 5 1 7-6-3-6 3 1-7-5-5 7-1 3-6z"/></svg>`,
+                desc: "Un clone robotique conçu pour attirer les Titans dans un piège mortel en simulant G-Toilet.", 
+                cap: ["Leurre stratégique"], equip: "Structure mécanique géante, lasers de diversion" 
+            },
+            { 
+                name: "Double Transporter Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 38 - Présent", status: "Vivant", size: "7.50 m", role: "Transporteur de Troupes", 
+                importance: "Secondaire", upgraded: "Compartiments doubles blindés", armed: "Oui (Mitrailleuses de défense)",
+                avatar: `<svg class="w-12 h-12 text-red-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="7" width="20" height="10" rx="2"/><path d="M6 7v10M18 7v10"/></svg>`,
+                desc: "Permet de transporter simultanément plusieurs petits soldats Skibidi au cœur des combats urbains.", 
+                cap: ["Transport de troupes de renfort"], equip: "Double cuvette géante, blindage anti-mines" 
+            },
+            { 
+                name: "Flamethrower Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 29 - Présent", status: "Vivant", size: "2.20 m", role: "Unité Incendiaire", 
+                importance: "Secondaire", upgraded: "Réservoirs de napalm pressurisé", armed: "Oui (Lance-flammes lourd)",
+                avatar: `<svg class="w-12 h-12 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2c0 4-4 6-4 10a4 4 0 0 0 8 0c0-4-4-6-4-10z"/></svg>`,
+                desc: "Projette des torrents de flammes dévastateurs pour carboniser les barricades de l'Alliance.", 
+                cap: ["Dégâts de zone par le feu"], equip: "Réservoirs de napalm, lance-flammes double" 
+            },
+            { 
+                name: "Helicopter Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 16 - Présent", status: "Vivant", size: "3.00 m", role: "Patrouilleur Aérien", 
+                importance: "Secondaire", upgraded: "Rotor supérieur renforcé", armed: "Oui (Mitrailleuse de nez)",
+                avatar: `<svg class="w-12 h-12 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 6v6m0 0l3 3m-3-3l-3 3M3 10h18M6 18h12"/></svg>`,
+                desc: "Unité volante classique assurant la surveillance aérienne et l'appui feu léger.", 
+                cap: ["Vol stationnaire", "Tir en altitude"], equip: "Rotor d'hélicoptère, mitrailleuse frontale" 
+            },
+
+            // --- MUTANTS CYBORGS ---
+            { 
+                name: "Mutant Buzzsaw Toilet", faction: "Mutants Cyborgs", ep: "Épisode 65 - Présent", status: "Vivant", size: "3.20 m", role: "Cyborg Combattant", 
+                importance: "Important", upgraded: "Double scies circulaires", armed: "Oui (Scies rotatives)",
+                avatar: `<svg class="w-12 h-12 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 3v18M3 12h18"/></svg>`,
+                desc: "Combine un corps mutant organique avec des implants cybernétiques et des lames circulaires mortelles.", 
+                cap: ["Scies circulaires rotatives", "Agilité"], equip: "Double scies circulaires motorisées" 
+            },
+            { 
+                name: "Mutant Berserker Toilet", faction: "Mutants Cyborgs", ep: "Épisode 68 - Présent", status: "Vivant", size: "3.40 m", role: "Force Brute", 
+                importance: "Secondaire", upgraded: "Gantelets cloutés", armed: "Oui (Gantelets de force)",
+                avatar: `<svg class="w-12 h-12 text-orange-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2h0"/></svg>`,
+                desc: "Fonce tête baissée dans les lignes ennemies dans un état de rage destructrice.", 
+                cap: ["Rage destructrice"], equip: "Gantelets cloutés renforcés" 
+            },
+            { 
+                name: "Mutant Cleaver Toilet", faction: "Mutants Cyborgs", ep: "Épisode 66 - Présent", status: "Vivant", size: "3.30 m", role: "Bourreau Mutant", 
+                importance: "Secondaire", upgraded: "Jetpack dorsal et hachoirs", armed: "Oui (Hachoirs géants)",
+                avatar: `<svg class="w-12 h-12 text-amber-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2v6h12V2H6zM12 8v14"/></svg>`,
+                desc: "Armé de hachoirs de boucher géants et d'un réacteur dorsal pour fondre sur ses proies.", 
+                cap: ["Coupe lourde", "Vol tactique"], equip: "Hachoirs de boucher géants, réacteur dorsal" 
+            },
+            { 
+                name: "Female Skibidi Mutant", faction: "Mutants Cyborgs", ep: "Épisode 71 - Présent", status: "Vivant", size: "2.70 m", role: "Combattante Agile", 
+                importance: "Secondaire", upgraded: "Lames de poignet énergétiques", armed: "Oui (Lames doubles)",
+                avatar: `<svg class="w-12 h-12 text-pink-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="7" r="4"/><path d="M5.5 21a8.38 8.38 0 0 1 13 0"/></svg>`,
+                desc: "Une mutante cyborg féminine extrêmement rapide et agile, spécialisée dans les assassinats ciblés.", 
+                cap: ["Agilité extrême", "Lames énergétiques"], equip: "Lames de poignet lumineuses, armure légère" 
+            },
+
+            // --- ASTRO TOILETS ---
+            { 
+                name: "Astro Detainer", faction: "Astro Toilets", ep: "Épisode 74 - Présent", status: "Vivant", size: "15.00 m", role: "Commandant Gravitationnel", 
+                importance: "Majeur", upgraded: "Manipulation gravitationnelle", armed: "Oui (Bras manipulateurs)",
+                avatar: `<svg class="w-12 h-12 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15 15 0 0 1 4 10"/></svg>`,
+                desc: "Maître absolu des champs gravitationnels et de la distorsion spatiale.", 
+                cap: ["Attraction gravitationnelle", "Vitesse supersonique"], equip: "Bras manipulateurs gravitationnels" 
+            },
+            { 
+                name: "Astro Obliterator", faction: "Astro Toilets", ep: "Épisode 76 - Présent", status: "Vivant", size: "18.00 m", role: "Siège Spatial", 
+                importance: "Important", upgraded: "Canon à antimatière", armed: "Oui (Canon antimatière)",
+                avatar: `<svg class="w-12 h-12 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>`,
+                desc: "Réduit en poussière toutes les structures grâce à son canon à antimatière.", 
+                cap: ["Tir d'antimatière"], equip: "Canon à antimatière lourd" 
+            },
+            { 
+                name: "Astro Mothership", faction: "Astro Toilets", ep: "Épisode 80 - Présent", status: "Vivant", size: "730.00 m", role: "Vaisseau Amiral et Porte-Étendard", 
+                importance: "Majeur", upgraded: "Bouclier absolu multicouche", armed: "Oui (Artillerie lourde planétaire)",
+                avatar: `<svg class="w-12 h-12 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>`,
+                desc: "Forteresse volante gigantesque menaçant la sécurité de la planète entière.", 
+                cap: ["Artillerie planétaire", "Bouclier absolu"], equip: "Artillerie lourde planétaire" 
+            },
+            { 
+                name: "Astro Interceptor", faction: "Astro Toilets", ep: "Épisode 75 - Présent", status: "Vivant", size: "7.00 m", role: "Éclaireur Rapide", 
+                importance: "Secondaire", upgraded: "Propulseurs supraluminiques", armed: "Oui (Canons laser rapides)",
+                avatar: `<svg class="w-12 h-12 text-purple-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M12 5l7 7-7 7"/></svg>`,
+                desc: "Le vaisseau de reconnaissance et d'interception le plus rapide de toute l'armada Astro.", 
+                cap: ["Vitesse suprême", "Laser rapide"], equip: "Propulseurs supraluminiques, canons laser rapides" 
+            },
+            { 
+                name: "Astro Juggernaut", faction: "Astro Toilets", ep: "Épisode 79 - Présent", status: "Vivant", size: "28.00 m", role: "Guerrier Suprême", 
+                importance: "Important", upgraded: "Armure interstellaire impénétrable", armed: "Oui (Canons d'impact)",
+                avatar: `<svg class="w-12 h-12 text-violet-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M9 9h6v6H9z"/></svg>`,
+                desc: "Un colosse blindé terrifiant capable de soutenir les attaques directes des Titans.", 
+                cap: ["Force titanesque", "Onde de choc"], equip: "Armure lourde interstellaire impénétrable, canons d'impact" 
+            },
+            { 
+                name: "Astro Duchess", faction: "Astro Toilets", ep: "Épisode 82 - Présent", status: "Vivant", size: "16.00 m", role: "Noble Impériale", 
+                importance: "Important", upgraded: "Technologie royale Astro", armed: "Oui (Contrôle gravitationnel royal)",
+                avatar: `<svg class="w-12 h-12 text-fuchsia-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5 4 2 7-7-4-7 4 2-7-5-4h7z"/></svg>`,
+                desc: "Dirige les forces d'élite Astro avec une froideur et une cruauté stratégique redoutables.", 
+                cap: ["Pression psychologique", "Technologie avancée"], equip: "Dispositif de contrôle gravitationnel royal, armure impériale" 
+            },
+
+            // --- HUMANS & SECRETS ---
+            { 
+                name: "Secret Agent", faction: "Humans / Secrets", ep: "Épisode 39 - Présent", status: "Vivant (Inconnu)", size: "1.80 m", role: "Entité Métaphysique", 
+                importance: "Majeur", upgraded: "Contrôle quantique de la réalité", armed: "Non (Pouvoirs métaphysiques)",
+                avatar: `<svg class="w-12 h-12 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2h12v6H6z"/><path d="M2 8h20v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V8z"/></svg>`,
+                desc: "Observe l'humanité et manipule en secret les fils de l'histoire et les destins des factions.", 
+                cap: ["Téléportation", "Contrôle de la réalité"], equip: "Costume classique, mallette secrète" 
+            },
+            // --- NOUVEAUX PERSONNAGES RAJOUTÉS (ALLIANCE, TOILETS, ASTROS) ---
+            { 
+                name: "Elite Cameraman", faction: "The Alliance", ep: "Épisode 45 - Présent", status: "Vivant", size: "1.90 m", role: "Garde d'Élite", 
+                importance: "Secondaire", upgraded: "Optique de visée laser avancée", armed: "Oui (Carabine laser d'élite)",
+                avatar: `<svg class="w-12 h-12 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="6" width="14" height="12" rx="2"/><circle cx="10" cy="12" r="3"/><path d="M12 2v4"/></svg>`,
+                desc: "Un soldat d'élite spécialisé dans l'escorte des commandants et la protection des points stratégiques.", 
+                cap: ["Tir de précision", "Résistance balistique"], equip: "Carabine laser d'élite, armure légère noire" 
+            },
+            { 
+                name: "Jetpack Cameraman", faction: "The Alliance", ep: "Épisode 44 - Présent", status: "Vivant", size: "1.85 m", role: "Infanterie Volante", 
+                importance: "Important", upgraded: "Propulseurs à haute vitesse", armed: "Oui (Pistolet laser)",
+                avatar: `<svg class="w-12 h-12 text-cyan-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l4 6H8l4-6z"/><rect x="4" y="10" width="16" height="10" rx="2"/></svg>`,
+                desc: "Permet d'engager les unités volantes Skibidi et d'effectuer des reconnaissances aériennes rapides.", 
+                cap: ["Vol supersonique", "Frappe en piqué"], equip: "Jetpack dorsal, pistolet laser compact" 
+            },
+            { 
+                name: "Sniper Cameraman", faction: "The Alliance", ep: "Épisode 36 - Présent", status: "Vivant", size: "1.85 m", role: "Tireur d'Élite", 
+                importance: "Secondaire", upgraded: "Lunette thermique à longue portée", armed: "Oui (Fusil sniper laser)",
+                avatar: `<svg class="w-12 h-12 text-blue-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M12 2v3m0 14v3M2 12h3m14 0h3"/></svg>`,
+                desc: "Élimine les têtes ennemies et les parasites à distance de sécurité depuis les toits ruinés.", 
+                cap: ["Précision chirurgicale", "Vision thermique"], equip: "Fusil sniper lourd à faisceau focalisé" 
+            },
+            { 
+                name: "Heavy Large Cameraman", faction: "The Alliance", ep: "Épisode 50 - Présent", status: "Vivant", size: "3.60 m", role: "Soutien Blindé Lourd", 
+                importance: "Important", upgraded: "Plaques de blindage en titane renforcé", armed: "Oui (Double minigun)",
+                avatar: `<svg class="w-12 h-12 text-cyan-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="4" width="20" height="16" rx="2"/><circle cx="12" cy="12" r="5"/></svg>`,
+                desc: "Une version colossale du Large Cameraman dotée d'une puissance de feu de suppression massive.", 
+                cap: ["Tir de suppression", "Blindage quasi impénétrable"], equip: "Double minigun rotatif, armure lourde intégrale" 
+            },
+            { 
+                name: "Assault Speakerman", faction: "The Alliance", ep: "Épisode 51 - Présent", status: "Vivant", size: "1.85 m", role: "Infanterie d'Assaut Sonique", 
+                importance: "Secondaire", upgraded: "Canons soniques portatifs rapides", armed: "Oui (Fusil sonique)",
+                avatar: `<svg class="w-12 h-12 text-orange-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 5L6 9H2v6h4l5 4V5z"/><path d="M15.54 8.46a5 5 0 0 1 0 7.07"/></svg>`,
+                desc: "Charge l'ennemi en maintenant un barrage d'ondes sonores assourdissantes en continu.", 
+                cap: ["Tir sonique en rafale", "Charge rapide"], equip: "Fusil sonique à impulsion rapide" 
+            },
+            { 
+                name: "Jetpack Speakerman", faction: "The Alliance", ep: "Épisode 46 - Présent", status: "Vivant", size: "1.85 m", role: "Intercepteur Aérien Sonique", 
+                importance: "Secondaire", upgraded: "Propulseurs sonores", armed: "Oui (Pistolets sonores doubles)",
+                avatar: `<svg class="w-12 h-12 text-amber-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l4 6H8l4-6z"/><circle cx="12" cy="15" r="4"/></svg>`,
+                desc: "Assure la supériorité aérienne aux côtés des Speakermen grâce à sa maniabilité redoutable.", 
+                cap: ["Voltige aérienne", "Pistolets soniques"], equip: "Jetpack sonique, pistolets à impulsions" 
+            },
+            { 
+                name: "Elite TV Man", faction: "The Alliance", ep: "Épisode 64 - Présent", status: "Vivant", size: "1.95 m", role: "Garde Tactique TV", 
+                importance: "Secondaire", upgraded: "Écran plasma renforcé", armed: "Oui (Barrière énergétique)",
+                avatar: `<svg class="w-12 h-12 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2"/><path d="M12 9v6M9 12h6"/></svg>`,
+                desc: "Un unité haut gradée protégeant les officiers TV et bloquant les tirs ennemis avec des barrières.", 
+                cap: ["Génération de barrière", "Téléportation tactique"], equip: "Générateur de bouclier portatif, écran plasma" 
+            },
+            { 
+                name: "Shadow TV Man", faction: "The Alliance", ep: "Épisode 70 - Présent", status: "Vivant", size: "1.90 m", role: "Espion et Saboteur", 
+                importance: "Important", upgraded: "Invisibilité quantique absolue", armed: "Oui (Lame d'ombre)",
+                avatar: `<svg class="w-12 h-12 text-indigo-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v8"/></svg>`,
+                desc: "Infiltre les bases ennemies sans être détecté pour saboter les générateurs Skibidi.", 
+                cap: ["Camouflage total", "Sabotage furtif"], equip: "Cape d'occultation quantique, lame ténébreuse" 
+            },
+            { 
+                name: "Rocket Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 22 - Présent", status: "Vivant", size: "2.10 m", role: "Artillerie Mobile", 
+                importance: "Important", upgraded: "Pods de roquettes multiples", armed: "Oui (Roquettes longue portée)",
+                avatar: `<svg class="w-12 h-12 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l3 7h7l-5 4 2 7-7-4-7 4 2-7-5-4h7z"/></svg>`,
+                desc: "Équipé de rampes de lancement pour pilonner les positions fortifiées de l'Alliance à distance.", 
+                cap: ["Barrage de roquettes", "Dégâts de zone"], equip: "Pods de roquettes multiples fixés sur l'arrière" 
+            },
+            { 
+                name: "Spider Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 40 - Présent", status: "Vivant", size: "3.80 m", role: "Unité Arachnide d'Assaut", 
+                importance: "Secondaire", upgraded: "Pattes mécaniques articulées en acier", armed: "Oui (Mitrailleuses intégrées)",
+                avatar: `<svg class="w-12 h-12 text-rose-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M2 12h20M4.93 4.93l14.14 14.14M19.07 4.93L4.93 19.07"/></svg>`,
+                desc: "Possède de multiples pattes articulées lui permettant d'escalader les gratte-ciels et toits.", 
+                cap: ["Escalade murale", "Agilité arachnide"], equip: "Pattes en acier, canons laser légers" 
+            },
+            { 
+                name: "Police Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 12 - Présent", status: "Vivant", size: "1.80 m", role: "Unité Anti-Émeute", 
+                importance: "Mineur", upgraded: "Gyrophare lumineux et plaque de blindage", armed: "Non (Charge rapide)",
+                avatar: `<svg class="w-12 h-12 text-blue-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l9 4v6c0 5.55-3.84 10.74-9 12-5.16-1.26-9-6.45-9-12V6l9-4z"/></svg>`,
+                desc: "Infanterie légère dotée d'un gyrophare de police et d'une résistance accrue aux tirs de base.", 
+                cap: ["Charge frontale", "Résistance accrue"], equip: "Gyrophare de police, plaque de bouclier" 
+            },
+            { 
+                name: "Mafia Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 19 - Présent", status: "Vivant", size: "1.80 m", role: "Garde du Corps Gangster", 
+                importance: "Secondaire", upgraded: "Chapeau fedora et lunettes de soleil", armed: "Oui (Mitrailleuse lourde)",
+                avatar: `<svg class="w-12 h-12 text-zinc-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M6 12a6 6 0 0 1 12 0"/><path d="M4 8h16"/></svg>`,
+                desc: "Reconnaissable à son look de parrain de la mafia, très discipliné et doté d'une cadence de tir élevée.", 
+                cap: ["Tir en rafale", "Discipline tactique"], equip: "Fedora, lunettes noires, mitraillette lourde" 
+            },
+            { 
+                name: "Gladiator Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 48 - Présent", status: "Vivant", size: "5.50 m", role: "Combattant d'Arène Colossal", 
+                importance: "Important", upgraded: "Casque à crête clouté et armure d'arène", armed: "Oui (Hache géante)",
+                avatar: `<svg class="w-12 h-12 text-amber-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5"/></svg>`,
+                desc: "Un combattant redoutable maniant une hache de bataille géante pourfendant les grands agents.", 
+                cap: ["Frappe titanesque", "Corps à corps dévastateur"], equip: "Hache de bataille géante, casque clouté" 
+            },
+            { 
+                name: "Mutant Acid Toilet", faction: "Mutants Cyborgs", ep: "Épisode 70 - Présent", status: "Vivant", size: "3.10 m", role: "Tireur Toxique Cyborg", 
+                importance: "Secondaire", upgraded: "Canon lance-acide chimique", armed: "Oui (Projectiles toxiques)",
+                avatar: `<svg class="w-12 h-12 text-green-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2a10 10 0 0 1 7.54 16.6l-2.54-2.6"/><path d="M12 6v6l4 2"/></svg>`,
+                desc: "Projette des substances corrosives à distance pour fondre l'armure des Cameramen.", 
+                cap: ["Projection toxique", "Mobilité accrue"], equip: "Canon lance-acide portable, implants cybernétiques" 
+            },
+            { 
+                name: "Mutant Dual-Blade Toilet", faction: "Mutants Cyborgs", ep: "Épisode 74 - Présent", status: "Vivant", size: "3.20 m", role: "Spécialiste Double Épée", 
+                importance: "Secondaire", upgraded: "Épées énergétiques lumineuses", armed: "Oui (Double épée plasma)",
+                avatar: `<svg class="w-12 h-12 text-cyan-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6"/><path d="M3 21l9-9m0 0l9 9"/></svg>`,
+                desc: "Maîtrise le combat rapproché grâce à deux épées plasma extrêmement tranchantes.", 
+                cap: ["Double estoc rapide", "Parade énergétique"], equip: "Deux épées lumineuses plasma" 
+            },
+            { 
+                name: "Astro Scout", faction: "Astro Toilets", ep: "Épisode 73 - Présent", status: "Vivant", size: "3.50 m", role: "Éclaireur Spatial Rapide", 
+                importance: "Mineur", upgraded: "Scanners optiques longue portée", armed: "Oui (Lasers légers)",
+                avatar: `<svg class="w-12 h-12 text-purple-300" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="8"/><line x1="12" y1="2" x2="12" y2="22"/></svg>`,
+                desc: "Patrouille à haute altitude pour repérer les positions de l'Alliance et avertir la flotte.", 
+                cap: ["Scan optique rapide", "Vitesse d'interception"], equip: "Scanners longue portée, propulseurs légers" 
+            },
+            { 
+                name: "Astro Carrier", faction: "Astro Toilets", ep: "Épisode 77 - Présent", status: "Vivant", size: "420.00 m", role: "Vaisseau Transporteur de Flotte", 
+                importance: "Important", upgraded: "Baies de lancement de drones intercepteurs", armed: "Oui (Drones d'attaque)",
+                avatar: `<svg class="w-12 h-12 text-purple-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M6 12h12"/></svg>`,
+                desc: "Déploie des vagues de drones intercepteurs directement au cœur des théâtres d'opérations majeurs.", 
+                cap: ["Déploiement de drones autonomes"], equip: "Baies de lancement spatiales, blindage lourd" 
+            },
+            // --- NOUVEAUX ASTRO TOILETS & SKIBIDI TOILETS INTÉGRALS ---
+            { 
+                name: "Destructor Astro Toilet", faction: "Astro Toilets", ep: "Épisode 75 - Présent", status: "Vivant", size: "20.00 m", role: "Unité de Pilonnage Spatial", 
+                importance: "Important", upgraded: "Double canon plasma lourd orbital", armed: "Oui (Canons orbitaux)",
+                avatar: `<svg class="w-12 h-12 text-purple-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 6v12M6 12h12"/></svg>`,
+                desc: "Spécialisé dans la destruction des fortifications lourdes et des retranchements de l'Alliance grâce à son double canon orbital.", 
+                cap: ["Pilonnage orbital", "Bouclier cinétique"], equip: "Double canon plasma orbital, plaques d'interstellaire renforcées" 
+            },
+            { 
+                name: "Demolisher Astro Toilet", faction: "Astro Toilets", ep: "Épisode 78 - Présent", status: "Vivant", size: "22.00 m", role: "Briseur de Lignes Stellaire", 
+                importance: "Important", upgraded: "Éperon frontal gravitationnel", armed: "Oui (Canons d'impact et charges)",
+                avatar: `<svg class="w-12 h-12 text-indigo-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 22 22 22 12 2"/></svg>`,
+                desc: "Fonce à pleine vitesse pour pulvériser les lignes défensives combinées de l'Alliance et des rebelles Skibidi.", 
+                cap: ["Charge cinétique dévastatrice", "Onde de choc spatiale"], equip: "Éperon d'impact frontal, réacteurs hyper-puissants" 
+            },
+            { 
+                name: "Hunter Astro Mutant", faction: "Astro Toilets", ep: "Épisode 79 - Présent", status: "Vivant", size: "4.00 m", role: "Traqueur d'Élite Interstellaire", 
+                importance: "Secondaire", upgraded: "Implants de traçage thermique et lames d'énergie", armed: "Oui (Lames de chasse)",
+                avatar: `<svg class="w-12 h-12 text-fuchsia-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 16l4.586-4.586a2 2 0 0 1 2.828 0L16 16m-2-2l1.586-1.586a2 2 0 0 1 2.828 0L20 14m-6-6h.01M6 20h12a2 2 0 0 0 2-2V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2z"/></svg>`,
+                desc: "Un guerrier hybride de la flotte Astro conçu pour traquer impitoyablement les agents fuyards.", 
+                cap: ["Traçage thermique", "Agilité aérienne"], equip: "Lames de chasse énergétiques, propulseurs dorsaux" 
+            },
+            { 
+                name: "Homeworld Detainer Astro Toilet", faction: "Astro Toilets", ep: "Épisode 81 - Présent", status: "Vivant", size: "18.00 m", role: "Commandant Suprême des Détenteurs", 
+                importance: "Majeur", upgraded: "Technologie de distorsion de classe impériale", armed: "Oui (Manipulateurs gravitationnels royaux)",
+                avatar: `<svg class="w-12 h-12 text-violet-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>`,
+                desc: "Le variant ultime des Détenteurs, venu directement du monde natal Astro pour reprendre le contrôle total du secteur.", 
+                cap: ["Distorsion spatiale absolue", "Renvoi de projectiles de Titans"], equip: "Manipulateurs gravitationnels royaux, armure impériale dorée" 
+            },
+            { 
+                name: "Duke Astro Toilet", faction: "Astro Toilets", ep: "Épisode 83 - Présent", status: "Vivant", size: "21.00 m", role: "Seigneur Régent de la Flotte", 
+                importance: "Majeur", upgraded: "Implants royaux suprêmes", armed: "Oui (Faisceaux d'annihilation royale)",
+                avatar: `<svg class="w-12 h-12 text-purple-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 4l3 12h14l3-12-6 7-4-7-4 7-6-7z"/></svg>`,
+                desc: "Un haut dignitaire de la noblesse Astro doté d'une autorité implacable et d'un armement destructeur.", 
+                cap: ["Commandement impérial", "Faisceaux d'annihilation"], equip: "Armure régente, émetteurs de faisceaux royaux" 
+            },
+            { 
+                name: "Annihilator Astro Toilet", faction: "Astro Toilets", ep: "Épisode 80 - Présent", status: "Vivant", size: "19.00 m", role: "Unité d'Annihilation Totale", 
+                importance: "Important", upgraded: "Rayon thermique à fusion concentrée", armed: "Oui (Canon thermique fusion)",
+                avatar: `<svg class="w-12 h-12 text-red-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="4"/></svg>`,
+                desc: "Détruit méthodiquement tout ce qui se trouve sur son champ de vision grâce à son rayon thermique de fusion.", 
+                cap: ["Fusion thermique", "Blindage anti-chaleur"], equip: "Canon thermique de fusion lourde" 
+            },
+            { 
+                name: "Brute Astro Toilet", faction: "Astro Toilets", ep: "Épisode 76 - Présent", status: "Vivant", size: "8.50 m", role: "Combattant Rapproché Astro", 
+                importance: "Secondaire", upgraded: "Implants de force brute", armed: "Oui (Gantelets à impact)",
+                avatar: `<svg class="w-12 h-12 text-purple-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 11V6a2 2 0 0 0-2-2h0a2 2 0 0 0-2 2h0M6 11V6a2 2 0 0 1 2-2h0a2 2 0 0 1 2 2h0"/></svg>`,
+                desc: "Un soldat Astro massif spécialisé dans les brèches au corps à corps et le combat rapproché.", 
+                cap: ["Force brute", "Résistance aux impacts"], equip: "Gantelets d'impact énergétique, armure compacte" 
+            },
+            { 
+                name: "Artillerist Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 33 - Présent", status: "Vivant", size: "4.00 m", role: "Batterie d'Artillerie Lourde", 
+                importance: "Secondaire", upgraded: "Canons de campagne doubles", armed: "Oui (Obusiers lourds)",
+                avatar: `<svg class="w-12 h-12 text-red-600" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12h20M12 2v20"/><rect x="8" y="8" width="8" height="8" rx="1"/></svg>`,
+                desc: "Pilonne les positions fixes de l'Alliance depuis l'arrière-garde avec des obus explosifs.", 
+                cap: ["Tir d'artillerie longue portée"], equip: "Obusiers lourds jumelés, cales de stabilisation" 
+            },
+            { 
+                name: "Armored Guardian Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 42 - Présent", status: "Vivant", size: "3.50 m", role: "Garde de Fortresse", 
+                importance: "Secondaire", upgraded: "Bouclier balistique en acier trempé", armed: "Oui (Bouclier et pistolet)",
+                avatar: `<svg class="w-12 h-12 text-rose-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l10 4v6c0 5.5-3.8 10.7-9 12-5.2-1.3-9-6.5-9-12V6l10-4z"/></svg>`,
+                desc: "Verrouille les accès aux bastions principaux des Skibidi Toilets avec son bouclier lourd.", 
+                cap: ["Défense impénétrable"], equip: "Bouclier balistique géant, pistolet laser de poing" 
+            },
+            { 
+                name: "Flying Spawner Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 52 - Présent", status: "Vivant", size: "7.50 m", role: "Transporteur Aérien de Drones", 
+                importance: "Important", upgraded: "Réacteurs quadruples et soute à parasites", armed: "Oui (Drones parasites)",
+                avatar: `<svg class="w-12 h-12 text-red-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2l10 7-4 13H6L2 9l10-7z"/></svg>`,
+                desc: "Largue continuellement des parasites et de petits drones volants au-dessus des lignes alliées.", 
+                cap: ["Largage de parasites aériens", "Vol stabilisé"], equip: "Réacteurs quadruples, soute de largage" 
+            },
+            { 
+                name: "Bomb Overload Skibidi Toilet", faction: "Skibidi Toilets", ep: "Épisode 61 - Présent", status: "Vivant (Kamikaze)", size: "2.50 m", role: "Unité Kamikaze Explosive", 
+                importance: "Secondaire", upgraded: "Charges d'antimatière instables", armed: "Oui (Explosifs tactiques)",
+                avatar: `<svg class="w-12 h-12 text-amber-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>`,
+                desc: "Se précipite sur les cibles prioritaires pour s'auto-détruire dans une gigantesque explosion.", 
+                cap: ["Auto-destruction explosive dévastatrice"], equip: "Ceinture d'explosifs instables, réacteur de vitesse" 
             }
         ];
 
-        // Système de repli automatique en cas d'erreur de chargement d'image (CORS / Lien brisé)
-        function handleImageError(imgElement, charName) {
-            imgElement.onerror = null;
-            // Remplacement par une illustration vectorielle dynamique de secours sans échec
-            imgElement.src = `https://placehold.co/600x400/0f141f/00f0ff?text=${encodeURIComponent(charName)}`;
+        let currentLetter = '';
+        let currentFaction = '';
+
+        // Initialisation de l'alphabet et rendu initial au chargement
+        window.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('alphabet-container');
+            if (container) {
+                for (let i = 65; i <= 90; i++) {
+                    const char = String.fromCharCode(i);
+                    const btn = document.createElement('button');
+                    btn.className = "px-2 py-0.5 rounded bg-fandom-dark border border-fandom-border font-cyber text-[10px] hover:border-fandom-blue text-slate-300";
+                    btn.innerText = char;
+                    btn.onclick = () => filterByLetter(char);
+                    container.appendChild(btn);
+                }
+            }
+            renderWiki();
+        });
+
+        function filterByFaction(faction) {
+            currentFaction = faction;
+            currentLetter = '';
+            const searchInput = document.getElementById('wiki-search');
+            renderWiki(searchInput ? searchInput.value.toLowerCase() : '');
         }
 
-        let currentFactionFilter = 'all';
+        function filterByLetter(letter) {
+            currentLetter = letter;
+            const searchInput = document.getElementById('wiki-search');
+            renderWiki(searchInput ? searchInput.value.toLowerCase() : '');
+        }
 
-        function updateWikiView() {
-            const query = document.getElementById('wiki-search').value.toLowerCase().trim();
-            const sortVal = document.getElementById('wiki-sort').value;
-            const clearBtn = document.getElementById('clear-search-btn');
+        function filterWiki() {
+            const searchInput = document.getElementById('wiki-search');
+            renderWiki(searchInput ? searchInput.value.toLowerCase() : '');
+        }
 
-            if (query.length > 0) {
-                clearBtn.classList.remove('hidden');
-            } else {
-                clearBtn.classList.add('hidden');
-            }
-
-            let filtered = charactersData.filter(char => {
-                const matchFaction = (currentFactionFilter === 'all' || char.faction === currentFactionFilter);
-                const matchQuery = query === '' || 
-                    char.name.toLowerCase().includes(query) ||
-                    char.firstAppearance.toLowerCase().includes(query) ||
-                    char.role.toLowerCase().includes(query) ||
-                    char.physicalDescription.toLowerCase().includes(query) ||
-                    char.abilities.some(a => a.toLowerCase().includes(query));
-                return matchFaction && matchQuery;
+        function renderWiki(query = '') {
+            const grid = document.getElementById('wiki-grid');
+            if (!grid) return;
+            grid.innerHTML = '';
+            
+            const filtered = characters.filter(c => {
+                const matchesSearch = c.name.toLowerCase().includes(query) || 
+                                      c.faction.toLowerCase().includes(query) || 
+                                      c.role.toLowerCase().includes(query);
+                const matchesFaction = !currentFaction || c.faction === currentFaction;
+                const matchesLetter = !currentLetter || c.name.toUpperCase().startsWith(currentLetter);
+                return matchesSearch && matchesFaction && matchesLetter;
             });
-
-            filtered.sort((a, b) => {
-                if (sortVal === 'episode-asc') return a.episodeNum - b.episodeNum;
-                if (sortVal === 'episode-desc') return b.episodeNum - a.episodeNum;
-                if (sortVal === 'power-desc') return b.powerLevel - a.powerLevel;
-                if (sortVal === 'name-asc') return a.name.localeCompare(b.name);
-                return 0;
-            });
-
-            document.getElementById('char-count').innerText = filtered.length;
-
-            const grid = document.getElementById('characters-grid');
-            const noResults = document.getElementById('no-results-msg');
 
             if (filtered.length === 0) {
-                grid.innerHTML = '';
-                noResults.classList.remove('hidden');
+                grid.innerHTML = `<div class="col-span-full text-center py-12 text-slate-500 font-cyber text-sm">Aucun personnage ne correspond à votre recherche.</div>`;
                 return;
             }
 
-            noResults.classList.add('hidden');
+            filtered.forEach((c, index) => {
+                let badgeColor = "bg-blue-500/10 text-blue-400 border-blue-500/30";
+                if(c.faction === "Skibidi Toilets") badgeColor = "bg-red-500/10 text-red-400 border-red-500/30";
+                if(c.faction === "Astro Toilets") badgeColor = "bg-purple-500/10 text-purple-400 border-purple-500/30";
+                if(c.faction === "Mutants Cyborgs") badgeColor = "bg-amber-500/10 text-amber-400 border-amber-500/30";
+                if(c.faction === "Humans / Secrets") badgeColor = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
 
-            grid.innerHTML = filtered.map(char => {
-                const abilitiesPreview = char.abilities.slice(0, 2).map(ab => `<span class="text-[10px] bg-cyber-dark px-2 py-0.5 rounded border border-slate-800 text-slate-300"><i class="fa-solid fa-bolt text-cyber-gold mr-1"></i>${ab}</span>`).join('');
-                
-                return `
-                    <div onclick="openCharacterModal('${char.id}')" class="bg-cyber-panel border border-cyber-border hover:border-cyber-blue/60 rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 hover:shadow-neon-blue flex flex-col justify-between group">
-                        <div class="relative h-48 w-full bg-cyber-dark overflow-hidden flex items-center justify-center">
-                            <div class="absolute inset-0 bg-gradient-to-t from-cyber-panel via-transparent to-transparent z-10"></div>
-                            <img src="${char.imageUrl}" alt="${char.name}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" onerror="handleImageError(this, '${char.name.replace(/'/g, "\\'")}')">
-                            <span class="absolute top-3 left-3 z-20 text-[10px] font-cyber uppercase tracking-wider px-2.5 py-1 rounded-full bg-black/70 backdrop-blur-md text-cyber-gold border border-cyber-gold/30">${char.factionLabel}</span>
-                            <span class="absolute top-3 right-3 z-20 text-[10px] font-mono px-2 py-0.5 rounded bg-black/70 backdrop-blur-md text-white border border-slate-700">${char.firstAppearance}</span>
+                const originalIndex = characters.indexOf(c);
+                const card = document.createElement('div');
+                card.className = "bg-fandom-panel border border-fandom-border rounded-xl p-5 space-y-4 hover:border-fandom-blue transition-all flex flex-col justify-between cursor-pointer group";
+                card.onclick = () => openCharacterModal(originalIndex);
+                card.innerHTML = `
+                    <div class="space-y-3">
+                        <div class="flex justify-between items-start">
+                            <span class="px-2.5 py-1 rounded-full font-cyber text-[9px] uppercase border ${badgeColor}">${c.faction}</span>
+                            <span class="text-[10px] text-slate-400 font-cyber font-bold">${c.ep}</span>
                         </div>
-
-                        <div class="p-5 space-y-3 flex-grow flex flex-col justify-between">
-                            <div class="space-y-2">
-                                <h3 class="font-cyber font-bold text-base text-white group-hover:text-cyber-blue transition-colors">${char.name}</h3>
-                                <p class="text-xs text-slate-300 line-clamp-2 leading-relaxed">
-                                    ${char.physicalDescription}
-                                </p>
+                        <div class="flex items-center gap-3">
+                            <div class="p-2 bg-fandom-dark rounded-lg border border-fandom-border flex-shrink-0">
+                                ${c.avatar}
                             </div>
-
-                            <div class="space-y-2 pt-2 border-t border-slate-800">
-                                <div class="flex justify-between text-[11px] font-cyber">
-                                    <span class="text-slate-400">État :</span>
-                                    <span class="${char.statusColor} font-semibold">${char.status}</span>
-                                </div>
-                                <div class="flex flex-wrap gap-1">
-                                    ${abilitiesPreview}
-                                </div>
+                            <div>
+                                <h3 class="font-cyber font-bold text-base text-white group-hover:text-fandom-blue transition-colors">${c.name}</h3>
+                                <span class="text-[11px] text-fandom-blue font-cyber block">${c.role}</span>
                             </div>
                         </div>
-
-                        <div class="px-5 py-3 bg-cyber-dark/60 border-t border-slate-800/80 flex items-center justify-between text-xs">
-                            <span class="text-slate-400 font-cyber">Puissance : <strong class="text-white">${char.powerLevel}%</strong></span>
-                            <span class="text-cyber-blue font-cyber flex items-center gap-1 group-hover:translate-x-1 transition-transform">Dossier <i class="fa-solid fa-arrow-right text-[10px]"></i></span>
+                        <div class="flex flex-wrap gap-1.5 text-[10px] font-cyber">
+                            <span class="px-2 py-0.5 rounded bg-fandom-dark border border-fandom-border text-slate-300">Taille : ${c.size}</span>
+                            <span class="px-2 py-0.5 rounded bg-fandom-dark border border-fandom-border text-emerald-400">Statut : ${c.status}</span>
                         </div>
+                        <p class="text-slate-400 text-xs leading-relaxed line-clamp-2">${c.desc}</p>
+                    </div>
+                    <div class="pt-3 border-t border-fandom-border flex justify-between items-center text-[10px] text-slate-500 font-cyber">
+                        <span>⭐ ${c.importance}</span>
+                        <span class="text-fandom-blue flex items-center gap-1 group-hover:translate-x-1 transition-transform">Détails <i class="fa-solid fa-arrow-right"></i></span>
                     </div>
                 `;
-            }).join('');
-        }
-
-        function filterCharacters(faction) {
-            currentFactionFilter = faction;
-            document.querySelectorAll('.filter-btn').forEach(btn => {
-                if (btn.getAttribute('data-filter') === faction) {
-                    btn.className = "filter-btn active px-3.5 py-2 rounded-lg font-cyber text-xs font-bold uppercase bg-white text-black transition-all shadow-md";
-                } else {
-                    btn.className = "filter-btn px-3.5 py-2 rounded-lg font-cyber text-xs font-bold uppercase bg-cyber-panel text-slate-300 border border-slate-700 hover:bg-slate-800 transition-all";
-                }
+                grid.appendChild(card);
             });
-            updateWikiView();
         }
 
-        function clearWikiSearch() {
-            document.getElementById('wiki-search').value = '';
-            updateWikiView();
-        }
-
-        function resetAllFilters() {
-            currentFactionFilter = 'all';
-            document.getElementById('wiki-search').value = '';
-            filterCharacters('all');
-        }
-
-        window.addEventListener('DOMContentLoaded', () => {
-            updateWikiView();
-            renderTimeline();
-        });
-
-        // =========================================================================
-        // NAVIGATION ENTRE LES ONGLETS ET MENU MOBILE
-        // =========================================================================
-        function switchTab(tabId) {
-            // Masquer tous les onglets
-            document.querySelectorAll('.tab-content').forEach(tab => {
-                tab.classList.add('hidden');
-            });
-
-            // Afficher l'onglet sélectionné
-            const target = document.getElementById(`tab-${tabId}`);
-            if (target) {
-                target.classList.remove('hidden');
-            }
-
-            // Mettre à jour l'état actif des boutons de navigation desktop
-            document.querySelectorAll('.nav-btn').forEach(btn => {
-                btn.className = "nav-btn px-4 py-2 rounded-lg font-cyber text-sm font-semibold transition-all duration-200 flex items-center gap-2 text-slate-400 hover:text-white hover:bg-slate-800/60 border border-transparent";
-            });
-
-            const activeBtn = document.getElementById(`nav-${tabId}`);
-            if (activeBtn) {
-                if (tabId === 'minijeu') {
-                    activeBtn.className = "nav-btn px-4 py-2 rounded-lg font-cyber text-sm font-semibold transition-all duration-200 flex items-center gap-2 text-cyber-gold bg-cyber-gold/15 border border-cyber-gold/50 shadow-neon-gold";
-                } else {
-                    activeBtn.className = "nav-btn active px-4 py-2 rounded-lg font-cyber text-sm font-semibold transition-all duration-200 flex items-center gap-2 bg-cyber-blue/15 text-cyber-blue border border-cyber-blue/50 shadow-neon-blue";
-                }
-            }
-
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function toggleMobileMenu() {
-            const menu = document.getElementById('mobile-menu');
-            const icon = document.getElementById('mobile-menu-icon');
-            menu.classList.toggle('hidden');
-            if (menu.classList.contains('hidden')) {
-                icon.className = "fa-solid fa-bars text-xl";
-            } else {
-                icon.className = "fa-solid fa-xmark text-xl";
-            }
-        }
-
-        // =========================================================================
-        // CHRONOLOGIE DES ARCS NARRATIFS
-        // =========================================================================
-        const timelineData = [
-            {
-                season: "Saison 1 à 3 (Ép. 1 - 10)",
-                title: "L'Invasion Initiale & Premiers Contacts",
-                badgeColor: "bg-amber-500/10 border-amber-500/40 text-amber-400",
-                desc: "Découverte terrifiante des têtes chantantes dans des cuvettes de toilettes. L'humanité est submergée par la vague virale avant l'intervention des premiers Cameramen.",
-                keyEvents: ["Première apparition virale (Ép. 1)", "Apparition du POV-Cameraman (Ép. 3)", "Arrivée de G-Toilet et des premiers affrontements armés (Ép. 7)"]
-            },
-            {
-                season: "Saison 4 à 8 (Ép. 11 - 27)",
-                title: "L'Entrée en Scène de l'Alliance & des Titans",
-                badgeColor: "bg-cyber-blue/10 border-cyber-blue/40 text-cyber-blue",
-                desc: "Les Speakermen rejoignent l'Alliance. Pour contrer les Skibidi Toilets géants et les boss armés, l'Alliance déploie sa super-arme ultime : le Titan Cameraman.",
-                keyEvents: ["Premiers Speakermen sur le terrain (Ép. 11)", "Déploiement du Titan Cameraman (Ép. 20)", "Apparition du Titan Speakerman (Ép. 26)"]
-            },
-            {
-                season: "Saison 9 à 15 (Ép. 28 - 50)",
-                title: "Infection Parasitaire & Révélation des TV Men",
-                badgeColor: "bg-purple-500/10 border-purple-500/40 text-purple-400",
-                desc: "Les Skibidi Toilets utilisent des parasites pour corrompre le Titan Speakerman. L'Alliance riposte en dévoilant les mystérieux TV Men et leur chef suprême, le Titan TV Man.",
-                keyEvents: ["Infection de Titan Speakerman par un parasite (Ép. 32)", "Première apparition des TV Men (Ép. 39)", "Libération de Titan Speakerman et déploiement de Cinema Man (Ép. 47)"]
-            },
-            {
-                season: "Saison 16 à 22 (Ép. 51 - 70)",
-                title: "La Bataille du Bunker & Mutants Cyborgs",
-                badgeColor: "bg-cyber-red/10 border-cyber-red/40 text-cyber-red",
-                desc: "G-Toilet et son scientifique créent une armée de mutants hybrides. L'Alliance lance un raid d'envergure contre le complexe souterrain secret, marqué par de lourds sacrifices (Plungerman, Large Scientist).",
-                keyEvents: ["Apparition des Mutants Cyborgs (Ép. 50-53)", "Raid massif du Bunker secret (Ép. 67)", "Élimination du Scientifique en Chef par les Titans"]
-            },
-            {
-                season: "Saison 23 à 27+ (Ép. 71 - 77+)",
-                title: "Invasion Galactique Astro Toilet & Trêve Forcée",
-                badgeColor: "bg-emerald-500/10 border-emerald-500/40 text-emerald-400",
-                desc: "Une menace bien plus puissante surgit de l'espace : la flotte des Astro Toilets. Face à cette armée interstellaire, les Skibidi Toilets survivants et l'Alliance scellent une trêve précaire.",
-                keyEvents: ["Première intervention des Astro Toilets (Ép. 58)", "Trêve historique entre l'Alliance et G-Toilet", "Approche du gigantesque Vaisseau-Mère Astro (Ép. 74-77)"]
-            }
-        ];
-
-        function renderTimeline() {
-            const container = document.getElementById('timeline-container');
-            if (!container) return;
-
-            container.innerHTML = timelineData.map((item, idx) => `
-                <div class="relative pl-8 sm:pl-10 group">
-                    <div class="absolute -left-[9px] top-1.5 w-4 h-4 rounded-full bg-cyber-dark border-2 border-cyber-blue group-hover:bg-cyber-blue transition-colors"></div>
-                    <div class="bg-cyber-panel border border-cyber-border rounded-xl p-5 sm:p-6 space-y-3 hover:border-cyber-blue/50 transition-all">
-                        <div class="flex flex-wrap items-center justify-between gap-2">
-                            <span class="px-2.5 py-1 rounded border font-cyber text-xs font-bold uppercase ${item.badgeColor}">${item.season}</span>
-                            <span class="text-xs text-slate-400 font-mono">Phase ${idx + 1} / 5</span>
-                        </div>
-                        <h3 class="font-cyber font-bold text-lg text-white">${item.title}</h3>
-                        <p class="text-sm text-slate-300 leading-relaxed">${item.desc}</p>
-                        <div class="pt-2 border-t border-slate-800 space-y-1">
-                            <span class="text-[11px] font-cyber text-cyber-gold uppercase block mb-1">Moments Clés :</span>
-                            ${item.keyEvents.map(e => `<div class="text-xs text-slate-400 flex items-center gap-2"><i class="fa-solid fa-angles-right text-cyber-blue text-[10px]"></i> ${e}</div>`).join('')}
-                        </div>
-                    </div>
-                </div>
-            `).join('');
-        }
-
-        // =========================================================================
-        // MODALE DE FICHE DÉTAILLÉE PERSONNAGE
-        function openCharacterModal(charId) {
-            const char = charactersData.find(c => c.id === charId);
-            if (!char) return;
+        function openCharacterModal(index) {
+            const c = characters[index];
+            let badgeColor = "bg-blue-500/10 text-blue-400 border-blue-500/30";
+            if(c.faction === "Skibidi Toilets") badgeColor = "bg-red-500/10 text-red-400 border-red-500/30";
+            if(c.faction === "Astro Toilets") badgeColor = "bg-purple-500/10 text-purple-400 border-purple-500/30";
+            if(c.faction === "Mutants Cyborgs") badgeColor = "bg-amber-500/10 text-amber-400 border-amber-500/30";
+            if(c.faction === "Humans / Secrets") badgeColor = "bg-emerald-500/10 text-emerald-400 border-emerald-500/30";
 
             const modalContent = document.getElementById('modal-content');
-
             modalContent.innerHTML = `
-                <div class="flex flex-col sm:flex-row items-center gap-6 border-b border-slate-800 pb-5">
-                    <div class="relative w-40 h-40 rounded-2xl bg-cyber-dark border border-cyber-blue/40 overflow-hidden shrink-0 shadow-neon-blue">
-                        <img src="${char.imageUrl}" alt="${char.name}" class="w-full h-full object-cover" onerror="handleImageError(this, '${char.name.replace(/'/g, "\\'")}')">
+                <div class="space-y-4">
+                    <div class="flex items-center gap-3">
+                        <span class="px-2.5 py-1 rounded-full font-cyber text-[10px] uppercase border ${badgeColor}">${c.faction}</span>
+                        <span class="text-xs text-slate-400 font-cyber font-bold">${c.ep}</span>
                     </div>
-
-                    <div class="space-y-2 text-center sm:text-left">
-                        <span class="text-xs font-cyber uppercase tracking-wider text-cyber-gold px-2.5 py-1 rounded bg-cyber-gold/10 border border-cyber-gold/30 inline-block">${char.factionLabel}</span>
-                        <h2 class="font-cyber text-xl sm:text-2xl font-black text-white">${char.name}</h2>
-                        <span class="text-xs font-mono text-slate-400 block">Première apparition : <strong class="text-white">${char.firstAppearance}</strong></span>
-                        <span class="text-xs font-cyber text-cyber-blue block">Rôle : ${char.role}</span>
-                    </div>
-                </div>
-
-                <div class="space-y-4 text-sm">
-                    <div class="bg-cyber-dark p-4 rounded-xl border border-slate-800 space-y-2">
-                        <span class="text-xs font-cyber text-cyber-blue uppercase block font-bold"><i class="fa-solid fa-user-shield mr-1"></i> Description Physique</span>
-                        <p class="text-slate-300 leading-relaxed">${char.physicalDescription}</p>
-                    </div>
-
-                    <div class="bg-cyber-dark p-4 rounded-xl border border-slate-800 space-y-2">
-                        <span class="text-xs font-cyber text-cyber-gold uppercase block font-bold"><i class="fa-solid fa-book-open mr-1"></i> Résumé & Rôle Narratif</span>
-                        <p class="text-slate-300 leading-relaxed">${char.summary}</p>
-                    </div>
-
-                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                        <div class="bg-cyber-dark p-4 rounded-xl border border-slate-800 space-y-3">
-                            <span class="text-xs font-cyber text-cyber-blue uppercase block font-bold"><i class="fa-solid fa-gauge-high mr-1"></i> Statistiques d'Unité</span>
-                            <div class="space-y-2 text-xs">
-                                <div>
-                                    <div class="flex justify-between mb-1"><span class="text-slate-400">Force / Puissance de feu</span><span class="text-white font-bold">${char.stats.force}%</span></div>
-                                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-cyber-blue h-full" style="width: ${char.stats.force}%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between mb-1"><span class="text-slate-400">Vitesse & Mobilité</span><span class="text-white font-bold">${char.stats.vitesse}%</span></div>
-                                    <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden"><div class="bg-cyber-gold h-full" style="width: ${char.stats.vitesse}%"></div></div>
-                                </div>
-                                <div>
-                                    <div class="flex justify-between mb-1"><span class="text-slate-400">Résistance / Armure</span><span class="text-white font-bold">${char.stats.resistance}%</span></div>
-                                    <div class="w-full bg-slate-800 h-2 renderer-bar overflow-hidden"><div class="bg-cyber-red h-full" style="width: ${char.stats.resistance}%"></div></div>
-                                </div>
-                            </div>
+                    <div class="flex items-center gap-4">
+                        <div class="p-3 bg-fandom-dark rounded-xl border border-fandom-border">
+                            ${c.avatar}
                         </div>
-
-                        <div class="bg-cyber-dark p-4 rounded-xl border border-slate-800 space-y-2">
-                            <span class="text-xs font-cyber text-emerald-400 uppercase block font-bold"><i class="fa-solid fa-bolt mr-1"></i> Capacités & Arsenal</span>
-                            <ul class="space-y-1.5 text-xs text-slate-300">
-                                ${char.abilities.map(ab => `<li class="flex items-start gap-2"><i class="fa-solid fa-check text-emerald-400 mt-0.5"></i><span>${ab}</span></li>`).join('')}
-                            </ul>
+                        <div>
+                            <h2 class="font-cyber font-black text-xl sm:text-2xl text-white">${c.name}</h2>
+                            <span class="text-xs text-fandom-blue font-cyber">${c.role}</span>
                         </div>
                     </div>
-
-                    <div class="flex justify-between items-center pt-2 text-xs font-cyber">
-                        <span class="text-slate-400">Statut actuel dans la série :</span>
-                        <span class="${char.statusColor} font-bold px-3 py-1 rounded bg-slate-900 border border-slate-800">${char.status}</span>
+                    <div class="grid grid-cols-2 gap-2 text-xs font-cyber">
+                        <div class="bg-fandom-dark p-2.5 rounded-lg border border-fandom-border">
+                            <span class="text-slate-500 block text-[9px] uppercase">Taille Estimée</span>
+                            <strong class="text-slate-200">${c.size}</strong>
+                        </div>
+                        <div class="bg-fandom-dark p-2.5 rounded-lg border border-fandom-border">
+                            <span class="text-slate-500 block text-[9px] uppercase">Statut Actuel</span>
+                            <strong class="text-emerald-400">${c.status}</strong>
+                        </div>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[11px] text-slate-400 font-cyber font-bold uppercase block">Description & Lore :</span>
+                        <p class="text-slate-300 text-xs leading-relaxed bg-fandom-dark p-3.5 rounded-lg border border-fandom-border">${c.desc}</p>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[11px] text-slate-400 font-cyber font-bold uppercase block">Améliorations (Upgrades) :</span>
+                        <p class="text-xs text-cyan-300 bg-fandom-dark p-2.5 rounded-lg border border-fandom-border">⚙️ ${c.upgraded}</p>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[11px] text-slate-400 font-cyber font-bold uppercase block">Équipements & Armements :</span>
+                        <p class="text-xs text-slate-300 bg-fandom-dark p-2.5 rounded-lg border border-fandom-border">🛠️ ${c.equip}</p>
+                    </div>
+                    <div class="space-y-1.5">
+                        <span class="text-[11px] text-slate-400 font-cyber font-bold uppercase block">Capacités Spéciales :</span>
+                        <div class="flex flex-wrap gap-1">
+                            ${c.cap.map(cap => `<span class="px-2 py-1 rounded bg-fandom-dark border border-fandom-border text-[11px] text-slate-300 font-cyber">⚡ ${cap}</span>`).join('')}
+                        </div>
                     </div>
                 </div>
             `;
-
-            document.getElementById('character-modal').classList.remove('hidden');
+            const modal = document.getElementById('character-modal');
+            if(modal) modal.classList.remove('hidden');
         }
 
-        function closeCharacterModal() {
-            document.getElementById('character-modal').classList.add('hidden');
+        function closeModal(e) {
+            const modal = document.getElementById('character-modal');
+            if(modal) modal.classList.add('hidden');
         }
 
-        function closeModalOnBackdrop(event) {
-            if (event.target.id === 'character-modal') {
-                closeCharacterModal();
-            }
+        function closeModalDirect() {
+            const modal = document.getElementById('character-modal');
+            if(modal) modal.classList.add('hidden');
         }
 
-        // =========================================================================
-        // MINI-JEU "FLUSH DEFENSE" (CANVAS & TONE.JS)
-        // =========================================================================
-        let canvas, ctx;
-        let gameRunning = false;
-        let gameScore = 0;
-        let gameWave = 1;
-        let gameHealth = 100;
-        let enemies = [];
-        let particles = [];
-        let gameInterval = null;
-        let spawnTimer = 0;
-        let soundEnabled = true;
-        let synth = null;
-
-        // Initialisation de Tone.js pour les effets sonores synthétiques
-        function initAudio() {
-            try {
-                if (!synth && window.Tone) {
-                    synth = new Tone.Synth().toDestination();
-                }
-            } catch (e) {
-                console.warn("Audio non initialisé", e);
-            }
-        }
-
-        function playSound(note = 'C4', duration = '8n') {
-            if (!soundEnabled) return;
-            try {
-                initAudio();
-                if (synth) {
-                    synth.triggerAttackRelease(note, duration);
-                }
-            } catch (e) {
-                // Ignore audio restriction errors
-            }
-        }
-
-        function toggleGameSound() {
-            soundEnabled = !soundEnabled;
-            const btn = document.getElementById('toggle-sound-btn');
-            const icon = document.getElementById('sound-icon');
-            if (soundEnabled) {
-                btn.innerHTML = `<i class="fa-solid fa-volume-high" id="sound-icon"></i> Son : ON`;
-            } else {
-                btn.innerHTML = `<i class="fa-solid fa-volume-xmark" id="sound-icon"></i> Son : OFF`;
-            }
-        }
-
-        function startGame() {
-            canvas = document.getElementById('game-canvas');
-            ctx = canvas.getContext('2d');
-            resizeCanvas();
-
-            gameRunning = true;
-            gameScore = 0;
-            gameWave = 1;
-            gameHealth = 100;
-            enemies = [];
-            particles = [];
-            spawnTimer = 0;
-
-            document.getElementById('game-overlay').classList.add('hidden');
-            updateHUD();
-
-            if (gameInterval) cancelAnimationFrame(gameInterval);
-            gameLoop();
-        }
-
-        function resizeCanvas() {
-            if (!canvas) return;
-            canvas.width = canvas.parentElement.clientWidth;
-            canvas.height = canvas.parentElement.clientHeight;
-        }
-
-        window.addEventListener('resize', () => {
-            if (gameRunning) resizeCanvas();
-        });
-
-        // Gestion des clics et touchs sur le canvas du jeu
-        document.addEventListener('DOMContentLoaded', () => {
-            const c = document.getElementById('game-canvas');
-            if (c) {
-                c.addEventListener('pointerdown', (e) => {
-                    if (!gameRunning) return;
-                    const rect = c.getBoundingClientRect();
-                    const x = e.clientX - rect.left;
-                    const y = e.clientY - rect.top;
-                    checkEnemyHit(x, y);
-                });
-            }
-        });
-
-        function checkEnemyHit(x, y) {
-            playSound('G5', '16n');
-            // Création d'effet visuel de tir au point cliqué
-            for (let i = 0; i < 6; i++) {
-                particles.push({
-                    x: x, y: y,
-                    vx: (Math.random() - 0.5) * 8,
-                    vy: (Math.random() - 0.5) * 8,
-                    radius: Math.random() * 3 + 1,
-                    color: '#00f0ff',
-                    life: 15
-                });
-            }
-
-            // Vérification de l'impact sur les ennemis
-            for (let i = enemies.length - 1; i >= 0; i--) {
-                let en = enemies[i];
-                let dist = Math.hypot(en.x - x, en.y - y);
-                if (dist < en.radius + 20) {
-                    en.hp--;
-                    if (en.hp <= 0) {
-                        // Ennemi détruit
-                        gameScore += en.points;
-                        playSound('C3', '8n');
-                        // Explosion de particules
-                        for (let p = 0; p < 12; p++) {
-                            particles.push({
-                                x: en.x, y: en.y,
-                                vx: (Math.random() - 0.5) * 10,
-                                vy: (Math.random() - 0.5) * 10,
-                                radius: Math.random() * 5 + 2,
-                                color: en.color,
-                                life: 25
-                            });
-                        }
-                        enemies.splice(i, 1);
-                    }
-                    break;
-                }
-            }
-            updateHUD();
-        }
-
-        function spawnEnemy() {
-            let types = [
-                { type: 'standard', color: '#ffd700', radius: 24, speed: 1.5 + gameWave * 0.2, hp: 1, points: 100 },
-                { type: 'astro', color: '#ff2a55', radius: 22, speed: 2.8 + gameWave * 0.3, hp: 1, points: 250 },
-                { type: 'gclone', color: '#a855f7', radius: 32, speed: 1.0 + gameWave * 0.1, hp: 3, points: 500 }
-            ];
-
-            let template = types[Math.floor(Math.random() * types.length)];
-            // Apparition aléatoire sur les bords
-            let side = Math.random();
-            let x, y;
-            if (side < 0.5) {
-                x = Math.random() * canvas.width;
-                y = -30;
-            } else {
-                x = Math.random() < 0.5 ? -30 : canvas.width + 30;
-                y = Math.random() * canvas.height;
-            }
-
-            // Cible le centre de la base (centre du canvas)
-            let targetX = canvas.width / 2;
-            let targetY = canvas.height / 2;
-            let angle = Math.atan2(targetY - y, targetX - x);
-
-            enemies.push({
-                x: x,
-                y: y,
-                vx: Math.cos(angle) * template.speed,
-                vy: Math.sin(angle) * template.speed,
-                radius: template.radius,
-                color: template.color,
-                hp: template.hp,
-                maxHp: template.hp,
-                points: template.points,
-                type: template.type
+        function switchTab(tabId) {
+            ['home', 'wiki', 'game', 'discord'].forEach(t => {
+                const el = document.getElementById(`tab-${t}`);
+                if(el) el.classList.add('hidden');
+                const btn = document.getElementById(`nav-${t}`);
+                if(btn) btn.className = "px-3 py-1.5 rounded-md font-cyber text-xs uppercase transition-all text-slate-300 hover:text-white hover:bg-slate-800";
             });
+
+            const activeTab = document.getElementById(`tab-${tabId}`);
+            if(activeTab) activeTab.classList.remove('hidden');
+            const activeBtn = document.getElementById(`nav-${tabId}`);
+            if(activeBtn) activeBtn.className = "px-3 py-1.5 rounded-md font-cyber text-xs uppercase transition-all text-fandom-blue bg-fandom-blue/10 border border-fandom-blue/30";
+
+            if(tabId === 'wiki') renderWiki();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function gameLoop() {
-            if (!gameRunning || !ctx) return;
-
-            // Nettoyage du canvas
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // Dessin du radar central de la base
-            ctx.strokeStyle = 'rgba(0, 240, 255, 0.15)';
-            ctx.lineWidth = 2;
-            ctx.beginPath();
-            ctx.arc(canvas.width / 2, canvas.height / 2, 60, 0, Math.PI * 2);
-            ctx.stroke();
-
-            // Gestion de l'apparition des ennemis
-            spawnTimer++;
-            if (spawnTimer > Math.max(30, 90 - gameWave * 10)) {
-                spawnEnemy();
-                spawnTimer = 0;
-            }
-
-            // Mise à jour et rendu des ennemis
-            for (let i = enemies.length - 1; i >= 0; i--) {
-                let en = enemies[i];
-                en.x += en.vx;
-                en.y += en.vy;
-
-                // Dessin de l'ennemi (Cuvette stylisée)
-                ctx.fillStyle = en.color;
-                ctx.beginPath();
-                ctx.arc(en.x, en.y, en.radius, 0, Math.PI * 2);
-                ctx.fill();
-                ctx.strokeStyle = '#ffffff';
-                ctx.lineWidth = 2;
-                ctx.stroke();
-
-                // Barre de vie si PV > 1
-                if (en.maxHp > 1) {
-                    ctx.fillStyle = '#000000';
-                    ctx.fillRect(en.x - 15, en.y - en.radius - 12, 30, 5);
-                    ctx.fillStyle = '#22c55e';
-                    ctx.fillRect(en.x - 15, en.y - en.radius - 12, (30 * (en.hp / en.maxHp)), 5);
-                }
-
-                // Vérification si l'ennemi atteint le centre (Base)
-                let centerDist = Math.hypot(en.x - canvas.width / 2, en.y - canvas.height / 2);
-                if (centerDist < 40) {
-                    gameHealth -= 10;
-                    playSound('E2', '4n');
-                    enemies.splice(i, 1);
-                    if (gameHealth <= 0) {
-                        gameOver();
-                        return;
-                    }
-                }
-            }
-
-            // Mise à jour des particules
-            for (let i = particles.length - 1; i >= 0; i--) {
-                let p = particles[i];
-                p.x += p.vx;
-                p.y += p.vy;
-                p.life--;
-
-                ctx.fillStyle = p.color;
-                ctx.beginPath();
-                ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-                ctx.fill();
-
-                if (p.life <= 0) {
-                    particles.splice(i, 1);
-                }
-            }
-
-            // Progression de vague selon le score
-            gameWave = Math.floor(gameScore / 1000) + 1;
-            updateHUD();
-
-            gameInterval = requestAnimationFrame(gameLoop);
+        let wave = 1, hp = 100, score = 0;
+        function startWave() {
+            if(wave > 5) { wave = 1; hp = 100; score = 0; }
+            score += wave * 250;
+            hp -= 10;
+            const wEl = document.getElementById('game-wave');
+            const hEl = document.getElementById('game-hp');
+            const sEl = document.getElementById('game-score');
+            const mEl = document.getElementById('game-message');
+            if(wEl) wEl.innerText = `${wave} / 5`;
+            if(hEl) hEl.innerText = `${hp} HP`;
+            if(sEl) sEl.innerText = `${score} pts`;
+            if(mEl) mEl.innerText = `Vague ${wave} repoussée avec succès !`;
+            wave++;
         }
 
-        function updateHUD() {
-            document.getElementById('game-score').innerText = gameScore;
-            document.getElementById('game-wave').innerText = gameWave;
-            document.getElementById('game-health-bar').style.width = Math.max(0, gameHealth) + '%';
-            
-            let hs = localStorage.getItem('skibidi_highscore') || 0;
-            if (gameScore > hs) {
-                hs = gameScore;
-                localStorage.setItem('skibidi_highscore', hs);
-            }
-            document.getElementById('game-highscore').innerText = hs;
+        // Gestion des sous-onglets Discord (4 onglets spécifiques demandés)
+        function switchDiscordSubTab(subTabId) {
+            ['invit', 'explication', 'periodes', 'dispos'].forEach(t => {
+                const content = document.getElementById(`discord-content-${t}`);
+                if(content) content.classList.add('hidden');
+                const btn = document.getElementById(`discord-sub-${t}`);
+                if(btn) btn.className = "discord-sub-btn px-3 py-2 rounded-xl font-cyber text-xs font-bold uppercase transition-all bg-fandom-panel text-slate-400 hover:text-white border border-fandom-border";
+            });
+
+            const targetContent = document.getElementById(`discord-content-${subTabId}`);
+            if(targetContent) targetContent.classList.remove('hidden');
+            const targetBtn = document.getElementById(`discord-sub-${subTabId}`);
+            if(targetBtn) targetBtn.className = "discord-sub-btn px-3 py-2 rounded-xl font-cyber text-xs font-bold uppercase transition-all bg-indigo-600 text-white shadow-lg";
         }
 
-        function gameOver() {
-            gameRunning = false;
-            cancelAnimationFrame(gameInterval);
+        function copyDiscordLink() {
+            const input = document.getElementById('discord-link-input');
+            if(input) {
+                input.select();
+                document.execCommand('copy');
+                alertBoxCustom("Lien Discord copié dans le presse-papier !");
+            }
+        }
 
-            const overlay = document.getElementById('game-overlay');
-            document.getElementById('overlay-title').innerText = "BASE SUBMERGÉE !";
-            document.getElementById('overlay-desc').innerHTML = `La défense a cédé sous la horde Skibidi.<br><strong>Score Final : ${gameScore} points</strong> (Vague ${gameWave})`;
-            overlay.classList.remove('hidden');
+        function alertBoxCustom(msg) {
+            // Création d'une modale toast non-intrusive
+            const toast = document.createElement('div');
+            toast.className = "fixed bottom-5 right-5 z-50 bg-indigo-600 text-white font-cyber text-xs px-4 py-3 rounded-xl shadow-2xl border border-indigo-400 animate-bounce";
+            toast.innerText = msg;
+            document.body.appendChild(toast);
+            setTimeout(() => { toast.remove(); }, 3000);
         }
     </script>
 </body>
